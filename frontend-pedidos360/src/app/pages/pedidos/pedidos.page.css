@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  max-width: 900px;
+  margin: 2rem auto;
+  font-family: system-ui, sans-serif;
+  padding: 0 1rem;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.form-nuevo form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+input { padding: 0.4rem; }
+button { padding: 0.4rem 0.9rem; cursor: pointer; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
+.error { color: #b00020; font-weight: bold; }

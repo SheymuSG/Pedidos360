@@ -1,0 +1,47 @@
+<header>
+  <h1>Pedidos360</h1>
+  <div>
+    <span>{{ auth.displayName }}</span>
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
+</header>
+
+<section class="form-nuevo">
+  <h2>Nuevo pedido</h2>
+  <form (ngSubmit)="crear()">
+    <input name="cliente" [(ngModel)]="nuevo.cliente" placeholder="Cliente" required />
+    <input name="descripcion" [(ngModel)]="nuevo.descripcion" placeholder="Descripción" required />
+    <input name="total" [(ngModel)]="nuevo.total" type="number" placeholder="Total" />
+    <button type="submit">Crear pedido</button>
+  </form>
+</section>
+
+@if (error) {
+  <p class="error">{{ error }}</p>
+}
+
+<section>
+  <h2>Pedidos</h2>
+  @if (cargando) {
+    <p>Cargando...</p>
+  } @else if (pedidos.length === 0) {
+    <p>No hay pedidos registrados.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Cliente</th><th>Descripción</th><th>Total</th><th>Fecha</th></tr>
+      </thead>
+      <tbody>
+        @for (p of pedidos; track p.id) {
+          <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.cliente }}</td>
+            <td>{{ p.descripcion }}</td>
+            <td>{{ p.total }}</td>
+            <td>{{ p.fechaCreacion }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

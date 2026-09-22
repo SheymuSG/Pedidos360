@@ -1,0 +1,16 @@
+### Llaves y secretos ###
+*.pem
+*.ppk
+*.key
+.env
+.env.*
+
+### Node / Angular ###
+frontend-pedidos360/node_modules/
+frontend-pedidos360/dist/
+frontend-pedidos360/.angular/
+
+### IDE / OS ###
+.vscode/
+.idea/
+.DS_Store
