@@ -193,8 +193,18 @@ public class SecurityConfig {
             if (expectedAudience == null || expectedAudience.isBlank()) {
                 return OAuth2TokenValidatorResult.success();
             }
+            // Entra ID a veces emite el aud como el Client ID "pelado" (sin api://)
+            // aunque el Application ID URI configurado sea api://<client-id>.
+            // Se acepta cualquiera de las dos formas.
+            String bareId = expectedAudience.startsWith("api://")
+                ? expectedAudience.substring("api://".length())
+                : expectedAudience;
+            String prefixedId = expectedAudience.startsWith("api://")
+                ? expectedAudience
+                : "api://" + expectedAudience;
+
             List<String> audiences = jwt.getAudience();
-            if (audiences != null && audiences.contains(expectedAudience)) {
+            if (audiences != null && (audiences.contains(bareId) || audiences.contains(prefixedId))) {
                 return OAuth2TokenValidatorResult.success();
             }
             OAuth2Error error = new OAuth2Error(

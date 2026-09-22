@@ -10,6 +10,11 @@ frontend-pedidos360/node_modules/
 frontend-pedidos360/dist/
 frontend-pedidos360/.angular/
 
+### Infra: variables generadas por los scripts (no son secretas, pero son
+### especificas de cada despliegue y no deben versionarse) ###
+infra/aws/phase1-env.sh
+infra/aws/phase2-env.sh
+
 ### IDE / OS ###
 .vscode/
 .idea/
