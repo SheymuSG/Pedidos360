@@ -1,0 +1,36 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-13T00:19:04.783-03:00  INFO 25704 --- [rabbit-admin-service] [           main] c.p.rabbitadmin.RabbitAdminApplication   : Starting RabbitAdminApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 25704 (C:\Users\sebas\OneDrive\Escritorio\Pedidos360-corregido\rabbit-admin-service\target\rabbit-admin-service-0.0.1-SNAPSHOT.jar started by sebas in C:\Users\sebas\OneDrive\Escritorio\Pedidos360-corregido)
+2026-10-13T00:19:04.886-03:00  INFO 25704 --- [rabbit-admin-service] [           main] c.p.rabbitadmin.RabbitAdminApplication   : The following 1 profile is active: "local"
+2026-10-13T00:19:26.302-03:00  INFO 25704 --- [rabbit-admin-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8082 (http)
+2026-10-13T00:19:26.517-03:00  INFO 25704 --- [rabbit-admin-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-13T00:19:26.560-03:00  INFO 25704 --- [rabbit-admin-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-13T00:19:26.871-03:00  INFO 25704 --- [rabbit-admin-service] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 21423 ms
+2026-10-13T00:19:40.899-03:00  INFO 25704 --- [rabbit-admin-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-10-13T00:19:41.526-03:00  INFO 25704 --- [rabbit-admin-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8082 (http) with context path '/'
+2026-10-13T00:19:41.584-03:00  INFO 25704 --- [rabbit-admin-service] [           main] c.p.rabbitadmin.RabbitAdminApplication   : Started RabbitAdminApplication in 41.388 seconds (process running for 46.788)
+2026-10-13T00:19:42.233-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-13T00:19:42.234-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-13T00:19:42.239-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2026-10-13T00:19:43.183-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672, localhost:5673]
+2026-10-13T00:19:44.048-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#526f6427:0/SimpleConnection@48316fac [delegate=amqp://pedidos360@127.0.0.1:5672/, localPort=57125]
+2026-10-13T00:21:46.821-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-9] c.p.r.service.RabbitAdminService         : [ADMIN] cola creada name=reportes.queue durable=true dlx=pedidos.dlx
+2026-10-13T00:21:47.874-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-4] c.p.r.service.RabbitAdminService         : [ADMIN] exchange creado name=reportes.topic type=TOPIC durable=true
+2026-10-13T00:21:48.982-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] c.p.r.service.RabbitAdminService         : [ADMIN] binding creado exchange=reportes.topic queue=reportes.queue routingKey='reporte.*'
+2026-10-13T00:21:51.199-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-3] c.p.r.service.RabbitAdminService         : [ADMIN] binding eliminado exchange=reportes.topic queue=reportes.queue routingKey='reporte.*'
+2026-10-13T00:21:52.641-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-7] c.p.r.service.RabbitAdminService         : [ADMIN] exchange eliminado name=reportes.topic
+2026-10-13T00:21:53.736-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] c.p.r.service.RabbitAdminService         : [ADMIN] cola eliminada name=reportes.queue
+2026-10-13T00:26:08.563-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-9] c.p.r.service.RabbitAdminService         : [ADMIN] cola creada name=reportes.queue durable=true dlx=pedidos.dlx
+2026-10-13T00:26:09.192-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-4] c.p.r.service.RabbitAdminService         : [ADMIN] exchange creado name=reportes.topic type=TOPIC durable=true
+2026-10-13T00:26:09.950-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] c.p.r.service.RabbitAdminService         : [ADMIN] binding creado exchange=reportes.topic queue=reportes.queue routingKey='reporte.*'
+2026-10-13T00:26:11.267-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-3] c.p.r.service.RabbitAdminService         : [ADMIN] binding eliminado exchange=reportes.topic queue=reportes.queue routingKey='reporte.*'
+2026-10-13T00:26:11.769-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-7] c.p.r.service.RabbitAdminService         : [ADMIN] exchange eliminado name=reportes.topic
+2026-10-13T00:26:12.343-03:00  INFO 25704 --- [rabbit-admin-service] [nio-8082-exec-1] c.p.r.service.RabbitAdminService         : [ADMIN] cola eliminada name=reportes.queue

@@ -1,0 +1,28 @@
+### EC2 pedidos360-ec2 (via SSM): contenedores y logs del procesador
+NAMES                     IMAGE                     STATUS
+pedidos360-backend        eclipse-temurin:17-jre    Up 2 minutes
+pedidos360-rabbit-admin   eclipse-temurin:17-jre    Up 2 minutes
+pedidos360-procesador     eclipse-temurin:17-jre    Up 2 minutes
+pedidos360-rabbit2        rabbitmq:4.2-management   Up 2 minutes (healthy)
+pedidos360-rabbit1        rabbitmq:4.2-management   Up 2 minutes (healthy)
+
+2026-10-13T15:15:13.937Z  INFO 1 --- [procesador-service] [ntContainer#2-1] c.p.procesador.tickets.TicketService     : [TICKET] Ticket TCK-11791904512 generado para el pedido #11791904512 (cliente 'Ana')
+2026-10-13T15:15:13.940Z  INFO 1 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] ACK msgId=ok-evt-1791904512 intento=1
+2026-10-13T15:15:13.939Z  INFO 1 --- [procesador-service] [ntContainer#1-1] c.p.p.n.NotificacionService              : [NOTIFICACION] Pedido #11791904512 confirmado: aviso enviado a cliente 'Ana' por un total de 19990.0
+2026-10-13T15:15:13.941Z  INFO 1 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] ACK msgId=ok-evt-1791904512 intento=1
+2026-10-13T15:15:14.209Z  INFO 1 --- [procesador-service] [ntContainer#0-1] c.p.p.documentos.DocumentoService        : [DOCUMENTO] comprobante generado para el pedido #11791904512 en /tmp/documentos/comprobante-pedido-11791904512.txt
+2026-10-13T15:15:14.210Z  INFO 1 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] ACK msgId=ok-cmd-1791904512 intento=1
+2026-10-13T15:15:14.682Z  INFO 1 --- [procesador-service] [ntContainer#1-1] c.p.p.n.NotificacionService              : [NOTIFICACION] Pedido #21791904512 confirmado: aviso enviado a cliente 'Bruno' por un total de 19990.0
+2026-10-13T15:15:14.683Z  INFO 1 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] ACK msgId=fail-evt-1791904512 intento=1
+2026-10-13T15:15:14.685Z  WARN 1 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] intento 1/3 fallo msgId=fail-evt-1791904512: Simulacion: servicio externo de TICKET no disponible (#FAIL-TICKET). Reintento en 1000 
+2026-10-13T15:15:15.173Z ERROR 1 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] NACK -> DLQ msgId=inv-evt-1791904512 motivo=error permanente: Simulacion: dato invalido para NOTIFICACION (#INVALID-NOTIFICACI
+2026-10-13T15:15:15.653Z  WARN 1 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] intento 1/3 fallo msgId=fail-cmd-1791904512: Simulacion: servicio externo de DOCUMENTO no disponible (#FAIL-DOCUMENTO). Reintento
+2026-10-13T15:15:15.687Z  WARN 1 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] intento 2/3 fallo msgId=fail-evt-1791904512: Simulacion: servicio externo de TICKET no disponible (#FAIL-TICKET). Reintento en 2000 
+2026-10-13T15:15:16.131Z  INFO 1 --- [procesador-service] [ntContainer#1-1] c.p.p.n.NotificacionService              : [NOTIFICACION] Pedido #51791904512 confirmado: aviso enviado a cliente 'Elena' por un total de 19990.0
+2026-10-13T15:15:16.132Z  INFO 1 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] ACK msgId=noroute-1791904512 intento=1
+2026-10-13T15:15:16.654Z  WARN 1 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] intento 2/3 fallo msgId=fail-cmd-1791904512: Simulacion: servicio externo de DOCUMENTO no disponible (#FAIL-DOCUMENTO). Reintento
+2026-10-13T15:15:17.688Z ERROR 1 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] NACK -> DLQ msgId=fail-evt-1791904512 motivo=reintentos agotados (3): Simulacion: servicio externo de TICKET no disponible (#FAIL-TI
+2026-10-13T15:15:17.690Z  INFO 1 --- [procesador-service] [ntContainer#2-1] c.p.procesador.tickets.TicketService     : [TICKET] Ticket TCK-31791904512 generado para el pedido #31791904512 (cliente 'Carla')
+2026-10-13T15:15:17.691Z  INFO 1 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] ACK msgId=inv-evt-1791904512 intento=1
+2026-10-13T15:15:18.655Z ERROR 1 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] NACK -> DLQ msgId=fail-cmd-1791904512 motivo=reintentos agotados (3): Simulacion: servicio externo de DOCUMENTO no disponible (#F
+

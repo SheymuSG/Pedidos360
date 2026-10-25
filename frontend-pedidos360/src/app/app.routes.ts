@@ -8,6 +8,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/pedidos/pedidos.page').then((m) => m.PedidosPage),
   },
+  {
+    path: 'mensajeria',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/mensajeria/mensajeria.page').then((m) => m.MensajeriaPage),
+  },
   { path: 'login', redirectTo: '' },
   { path: '**', redirectTo: '' },
 ];

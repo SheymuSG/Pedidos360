@@ -1,0 +1,58 @@
+<header>
+  <h1>Mensajería RabbitMQ</h1>
+  <div>
+    <a routerLink="/pedidos">Pedidos</a>
+    <span>{{ auth.displayName }}</span>
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
+</header>
+
+@if (error) {
+  <p class="error">{{ error }}</p>
+}
+
+@if (hayAlerta) {
+  <section class="alerta" role="alert">
+    ALERTA: hay {{ totalEnDlq }} mensaje(s) en colas de mensajes muertos (DLQ). Revise los logs del
+    procesador y el detalle de cada mensaje en RabbitMQ Management.
+  </section>
+}
+
+<section>
+  <h2>Colas y DLQ</h2>
+  @if (!cargado) {
+    <p>Cargando...</p>
+  } @else if (colas.length === 0) {
+    <p>No hay colas configuradas para monitorear.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Cola</th>
+          <th>Mensajes</th>
+          <th>Consumidores</th>
+          <th>DLQ</th>
+          <th>En DLQ</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of colas; track c.queue) {
+          <tr [class.fila-alerta]="c.alert">
+            <td>{{ c.queue }}</td>
+            <td>{{ c.queueMessages }}</td>
+            <td>{{ c.queueConsumers }}</td>
+            <td>{{ c.dlq }}</td>
+            <td>{{ c.dlqMessages }}</td>
+            <td>
+              <span class="estado" [class.estado-ok]="c.state === 'OK'" [class.estado-alerta]="c.state === 'ALERTA'">
+                {{ c.state }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <p class="nota">Se actualiza cada 5 segundos.</p>
+  }
+</section>

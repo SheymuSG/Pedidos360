@@ -20,8 +20,8 @@ export const loginRequest: PopupRequest = {
   scopes: ['openid', 'profile', 'email', environment.msal.scope],
 };
 
-// Rutas que deben llevar el Bearer token del scope de la API.
-export const protectedResourceMap = new Map<string, string[]>([
-  [`${window.location.origin}/api/*`, [environment.msal.scope]],
-  ['/api/*', [environment.msal.scope]],
-]);
+// El Bearer token lo adjunta authTokenInterceptor (core/auth-token.interceptor.ts) a toda llamada /api/.
+// Este mapa se deja VACIO a proposito: cuando el frontend se sirve desde el mismo dominio que el
+// API Gateway, las rutas /api/* coinciden con el origen y el MsalInterceptor de Microsoft se activaria
+// ademas del nuestro; los dos pedirian token a la vez y se pisan (error al adquirir el token).
+export const protectedResourceMap = new Map<string, string[]>();

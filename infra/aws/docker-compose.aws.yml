@@ -1,0 +1,99 @@
+# Despliegue en una unica EC2: cluster RabbitMQ (2 nodos) + los 3 microservicios.
+# La base de datos es RDS (no se levanta aqui). Los jars llegan en el bundle (ver bootstrap-ec2.sh).
+#
+# Estructura esperada en /opt/pedidos360:
+#   docker-compose.yml  (este archivo)   rabbitmq.conf   .env   jars/{backend,procesador-service,rabbit-admin-service}.jar
+#
+# Variables (.env): RABBITMQ_USERNAME, RABBITMQ_PASSWORD, RABBITMQ_ERLANG_COOKIE,
+#                   SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD
+name: pedidos360
+
+x-rabbit: &rabbit
+  image: rabbitmq:4.2-management
+  restart: unless-stopped
+  environment:
+    RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:?defina RABBITMQ_ERLANG_COOKIE}
+    RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:?defina RABBITMQ_USERNAME}
+    RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?defina RABBITMQ_PASSWORD}
+  healthcheck:
+    test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/5672'"]
+    interval: 10s
+    timeout: 5s
+    retries: 12
+    start_period: 30s
+
+x-app: &app
+  image: eclipse-temurin:17-jre
+  restart: unless-stopped
+  working_dir: /app
+  depends_on:
+    - rabbit1
+    - rabbit2
+  environment: &app-env
+    RABBITMQ_ADDRESSES: rabbit1:5672,rabbit2:5672
+    RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+    RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    JAVA_TOOL_OPTIONS: "-Xmx320m"
+    # Dominios autorizados por CORS (backend y administrador). Ver infra/aws/set-allowed-origins.sh
+    PEDIDOS360_ALLOWED_ORIGINS: ${PEDIDOS360_ALLOWED_ORIGINS:-http://localhost:4200}
+
+services:
+  rabbit1:
+    <<: *rabbit
+    container_name: pedidos360-rabbit1
+    hostname: rabbit1
+    ports:
+      - "15672:15672"      # Management UI (el security group la limita a una IP)
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/20-cluster.conf:ro
+      - rabbit1_data:/var/lib/rabbitmq
+
+  rabbit2:
+    <<: *rabbit
+    container_name: pedidos360-rabbit2
+    hostname: rabbit2
+    depends_on:
+      - rabbit1
+    ports:
+      - "15673:15672"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/20-cluster.conf:ro
+      - rabbit2_data:/var/lib/rabbitmq
+
+  procesador:
+    <<: *app
+    container_name: pedidos360-procesador
+    command: ["java", "-jar", "/app/app.jar"]
+    volumes:
+      - ./jars/procesador-service.jar:/app/app.jar:ro
+    environment:
+      <<: *app-env
+      FAILURE_SIMULATION: "true"      # demostracion de DLQ; poner "false" en uso real
+      DOCUMENTS_DIR: /tmp/documentos
+
+  rabbit-admin:
+    <<: *app
+    container_name: pedidos360-rabbit-admin
+    command: ["java", "-jar", "/app/app.jar"]
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./jars/rabbit-admin-service.jar:/app/app.jar:ro
+
+  backend:
+    <<: *app
+    container_name: pedidos360-backend
+    command: ["java", "-jar", "/app/app.jar"]
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./jars/backend.jar:/app/app.jar:ro
+    environment:
+      <<: *app-env
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:?defina SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:?defina SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:?defina SPRING_DATASOURCE_PASSWORD}
+
+volumes:
+  rabbit1_data:
+  rabbit2_data:

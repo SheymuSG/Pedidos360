@@ -4,6 +4,7 @@
 *.key
 .env
 .env.*
+!.env.example
 
 ### Node / Angular ###
 frontend-pedidos360/node_modules/
@@ -19,3 +20,5 @@ infra/aws/phase2-env.sh
 .vscode/
 .idea/
 .DS_Store
+.local-logs/
+generated-documents/

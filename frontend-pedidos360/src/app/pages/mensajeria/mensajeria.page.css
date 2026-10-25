@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  max-width: 900px;
+  margin: 2rem auto;
+  font-family: system-ui, sans-serif;
+  padding: 0 1rem;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+header div { display: flex; gap: 0.75rem; align-items: center; }
+button { padding: 0.4rem 0.9rem; cursor: pointer; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
+.error { color: #b00020; font-weight: bold; }
+.alerta {
+  background: #fee2e2;
+  border-left: 6px solid #dc2626;
+  padding: 1rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.fila-alerta { background: #fff5f5; }
+.estado { padding: 0.1rem 0.5rem; border-radius: 4px; background: #e5e7eb; }
+.estado-ok { background: #dcfce7; }
+.estado-alerta { background: #fecaca; font-weight: bold; }
+.nota { color: #6b7280; font-size: 0.85rem; }

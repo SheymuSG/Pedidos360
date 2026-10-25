@@ -43,6 +43,12 @@
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
 
+        <!-- Mensajeria asincrona: el backend publica eventos de pedido en RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
         <!-- ============================================== -->
         <!-- NUEVAS DEPENDENCIAS PARA BASE DE DATOS         -->
         <!-- ============================================== -->

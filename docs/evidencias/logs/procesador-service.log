@@ -1,0 +1,57 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-13T00:24:25.376-03:00  INFO 17432 --- [procesador-service] [           main] c.p.procesador.ProcesadorApplication     : Starting ProcesadorApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 17432 (C:\Users\sebas\OneDrive\Escritorio\Pedidos360-corregido\procesador-service\target\procesador-service-0.0.1-SNAPSHOT.jar started by sebas in C:\Users\sebas\OneDrive\Escritorio\Pedidos360-corregido)
+2026-10-13T00:24:25.392-03:00  INFO 17432 --- [procesador-service] [           main] c.p.procesador.ProcesadorApplication     : The following 1 profile is active: "local"
+2026-10-13T00:24:33.182-03:00  INFO 17432 --- [procesador-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8081 (http)
+2026-10-13T00:24:33.346-03:00  INFO 17432 --- [procesador-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-13T00:24:33.347-03:00  INFO 17432 --- [procesador-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-13T00:24:33.575-03:00  INFO 17432 --- [procesador-service] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 7846 ms
+2026-10-13T00:24:42.237-03:00  INFO 17432 --- [procesador-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-10-13T00:24:42.968-03:00  INFO 17432 --- [procesador-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
+2026-10-13T00:24:42.995-03:00  INFO 17432 --- [procesador-service] [           main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672, localhost:5673]
+2026-10-13T00:24:43.886-03:00  INFO 17432 --- [procesador-service] [           main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#2d22d3b1:0/SimpleConnection@65d73bd [delegate=amqp://pedidos360@127.0.0.1:5672/, localPort=57509]
+2026-10-13T00:24:44.017-03:00  INFO 17432 --- [procesador-service] [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-13T00:24:44.018-03:00  INFO 17432 --- [procesador-service] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-13T00:24:44.029-03:00  INFO 17432 --- [procesador-service] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 9 ms
+2026-10-13T00:24:45.592-03:00  INFO 17432 --- [procesador-service] [           main] c.p.procesador.ProcesadorApplication     : Started ProcesadorApplication in 22.831 seconds (process running for 26.238)
+2026-10-13T00:25:22.794-03:00  INFO 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.n.NotificacionService              : [NOTIFICACION] Pedido #6 confirmado: aviso enviado a cliente 'Ana Perez' por un total de 19990.0
+2026-10-13T00:25:22.800-03:00  INFO 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] ACK msgId=c0a79925-016c-4adb-ab3b-2ad9a3c2a7f2 intento=1
+2026-10-13T00:25:22.802-03:00  INFO 17432 --- [procesador-service] [ntContainer#2-1] c.p.procesador.tickets.TicketService     : [TICKET] Ticket TCK-000006 generado para el pedido #6 (cliente 'Ana Perez')
+2026-10-13T00:25:22.803-03:00  INFO 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] ACK msgId=c0a79925-016c-4adb-ab3b-2ad9a3c2a7f2 intento=1
+2026-10-13T00:25:22.804-03:00  INFO 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.documentos.DocumentoService        : [DOCUMENTO] comprobante generado para el pedido #6 en .\generated-documents\comprobante-pedido-6.txt
+2026-10-13T00:25:22.805-03:00  INFO 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] ACK msgId=74e706ef-4eb0-4328-a1e1-9d9a7459e886 intento=1
+2026-10-13T00:25:27.831-03:00  WARN 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] intento 1/3 fallo msgId=8190b0ba-1c35-447e-9363-6edd1d1ded31: Simulacion: fallo transitorio 1/2 en TICKET. Reintento en 1000 ms
+2026-10-13T00:25:27.849-03:00  INFO 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.n.NotificacionService              : [NOTIFICACION] Pedido #7 confirmado: aviso enviado a cliente 'Bruno Diaz' por un total de 19990.0
+2026-10-13T00:25:27.850-03:00  INFO 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] ACK msgId=8190b0ba-1c35-447e-9363-6edd1d1ded31 intento=1
+2026-10-13T00:25:27.854-03:00  INFO 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.documentos.DocumentoService        : [DOCUMENTO] comprobante generado para el pedido #7 en .\generated-documents\comprobante-pedido-7.txt
+2026-10-13T00:25:27.855-03:00  INFO 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] ACK msgId=5e1f99a7-9e89-4164-98df-de759ac13e2a intento=1
+2026-10-13T00:25:28.846-03:00  WARN 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] intento 2/3 fallo msgId=8190b0ba-1c35-447e-9363-6edd1d1ded31: Simulacion: fallo transitorio 2/2 en TICKET. Reintento en 2000 ms
+2026-10-13T00:25:30.857-03:00  INFO 17432 --- [procesador-service] [ntContainer#2-1] c.p.procesador.tickets.TicketService     : [TICKET] Ticket TCK-000007 generado para el pedido #7 (cliente 'Bruno Diaz')
+2026-10-13T00:25:30.858-03:00  INFO 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] ACK msgId=8190b0ba-1c35-447e-9363-6edd1d1ded31 intento=3
+2026-10-13T00:25:36.649-03:00  INFO 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.n.NotificacionService              : [NOTIFICACION] Pedido #8 confirmado: aviso enviado a cliente 'Carla Soto' por un total de 19990.0
+2026-10-13T00:25:36.652-03:00  INFO 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] ACK msgId=5a4666e3-8a4b-445f-9622-e4b2df26d3d9 intento=1
+2026-10-13T00:25:36.655-03:00  WARN 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] intento 1/3 fallo msgId=5a4666e3-8a4b-445f-9622-e4b2df26d3d9: Simulacion: servicio externo de TICKET no disponible (#FAIL-TICKET). Reintento en 1000 ms
+2026-10-13T00:25:36.658-03:00  INFO 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.documentos.DocumentoService        : [DOCUMENTO] comprobante generado para el pedido #8 en .\generated-documents\comprobante-pedido-8.txt
+2026-10-13T00:25:36.659-03:00  INFO 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] ACK msgId=76d7e7dc-7806-4444-8f62-7dc78a469fd9 intento=1
+2026-10-13T00:25:37.658-03:00  WARN 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] intento 2/3 fallo msgId=5a4666e3-8a4b-445f-9622-e4b2df26d3d9: Simulacion: servicio externo de TICKET no disponible (#FAIL-TICKET). Reintento en 2000 ms
+2026-10-13T00:25:39.695-03:00 ERROR 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] NACK -> DLQ msgId=5a4666e3-8a4b-445f-9622-e4b2df26d3d9 motivo=reintentos agotados (3): Simulacion: servicio externo de TICKET no disponible (#FAIL-TICKET)
+2026-10-13T00:25:48.009-03:00  INFO 17432 --- [procesador-service] [ntContainer#2-1] c.p.procesador.tickets.TicketService     : [TICKET] Ticket TCK-000009 generado para el pedido #9 (cliente 'Diego Mora')
+2026-10-13T00:25:48.010-03:00  INFO 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] ACK msgId=4f778bcb-22bf-49e8-afcd-f2e060ec38ff intento=1
+2026-10-13T00:25:48.014-03:00 ERROR 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] NACK -> DLQ msgId=4f778bcb-22bf-49e8-afcd-f2e060ec38ff motivo=error permanente: Simulacion: dato invalido para NOTIFICACION (#INVALID-NOTIFICACION)
+2026-10-13T00:25:48.025-03:00  INFO 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.documentos.DocumentoService        : [DOCUMENTO] comprobante generado para el pedido #9 en .\generated-documents\comprobante-pedido-9.txt
+2026-10-13T00:25:48.027-03:00  INFO 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] ACK msgId=a3f74010-405a-463b-8fdf-f392ca5c48e5 intento=1
+2026-10-13T00:25:54.190-03:00  INFO 17432 --- [procesador-service] [ntContainer#2-1] c.p.procesador.tickets.TicketService     : [TICKET] Ticket TCK-000010 generado para el pedido #10 (cliente 'Elena Rojas')
+2026-10-13T00:25:54.190-03:00  WARN 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] intento 1/3 fallo msgId=94a893ce-9cd4-447c-a7e8-a948b30b1068: Simulacion: servicio externo de DOCUMENTO no disponible (#FAIL-DOCUMENTO). Reintento en 1000 ms
+2026-10-13T00:25:54.191-03:00  INFO 17432 --- [procesador-service] [ntContainer#2-1] c.p.p.messaging.AckingMessageProcessor   : [TICKET] ACK msgId=60bb56fd-f00c-4f29-8832-dddf8441f6f1 intento=1
+2026-10-13T00:25:54.192-03:00  INFO 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.n.NotificacionService              : [NOTIFICACION] Pedido #10 confirmado: aviso enviado a cliente 'Elena Rojas' por un total de 19990.0
+2026-10-13T00:25:54.194-03:00  INFO 17432 --- [procesador-service] [ntContainer#1-1] c.p.p.messaging.AckingMessageProcessor   : [NOTIFICACION] ACK msgId=60bb56fd-f00c-4f29-8832-dddf8441f6f1 intento=1
+2026-10-13T00:25:55.203-03:00  WARN 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] intento 2/3 fallo msgId=94a893ce-9cd4-447c-a7e8-a948b30b1068: Simulacion: servicio externo de DOCUMENTO no disponible (#FAIL-DOCUMENTO). Reintento en 2000 ms
+2026-10-13T00:25:57.207-03:00 ERROR 17432 --- [procesador-service] [ntContainer#0-1] c.p.p.messaging.AckingMessageProcessor   : [DOCUMENTO] NACK -> DLQ msgId=94a893ce-9cd4-447c-a7e8-a948b30b1068 motivo=reintentos agotados (3): Simulacion: servicio externo de DOCUMENTO no disponible (#FAIL-DOCUMENTO)

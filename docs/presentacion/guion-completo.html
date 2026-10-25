@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guion video Pedidos360 – Evaluación 2</title>
+<style>
+  @page { size: A4; margin: 16mm 16mm 18mm; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; color: #1f2328; font-size: 12pt; line-height: 1.45; margin: 0; }
+  h1 { font-size: 22pt; margin: 0 0 4px; }
+  .sub { color: #57606a; margin: 0 0 16px; }
+  h2 { font-size: 16pt; margin: 0 0 10px; border-bottom: 2px solid #0969da; padding-bottom: 4px; }
+  h3.sec { font-size: 13pt; margin: 18px 0 8px; }
+  .pagina { break-before: page; }
+  table { border-collapse: collapse; width: 100%; margin: 6px 0 8px; }
+  td, th { border: 1px solid #d0d7de; padding: 6px 9px; vertical-align: top; text-align: left; }
+  th { background: #f6f8fa; font-weight: 600; }
+  table.datos td:first-child { width: 28%; font-weight: 600; background: #f6f8fa; }
+  .bloque { border: 1px solid #d0d7de; border-radius: 8px; padding: 9px 13px; margin: 9px 0; break-inside: avoid; }
+  .bloque h4 { margin: 0 0 4px; font-size: 12pt; }
+  .tiempo { color: #57606a; font-weight: 400; }
+  .muestra { color: #57606a; font-size: 10.5pt; margin: 0 0 6px; }
+  .di { background: #f6f8fa; border-left: 4px solid #0969da; padding: 7px 11px; margin: 6px 0 0; }
+  code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 10.5pt; background: #eff1f3; padding: 0 3px; border-radius: 3px; }
+  pre { font-family: Consolas, "Cascadia Mono", monospace; font-size: 10pt; line-height: 1.35; background: #0d1117; color: #e6edf3; padding: 9px 12px; border-radius: 6px; margin: 4px 0 0; white-space: pre-wrap; }
+  .c { color: #8b949e; }
+  ul.check { list-style: none; padding-left: 0; margin: 6px 0; }
+  ul.check li { margin: 3px 0; }
+  ul.check li::before { content: "\2610  "; }
+  .diagrama img { width: 100%; max-height: 240mm; object-fit: contain; display: block; margin: 0 auto; }
+  .nota { color: #57606a; font-size: 10.5pt; }
+  .req { display: inline-block; background: #ddf4ff; color: #0550ae; border-radius: 10px; padding: 0 7px; font-size: 9.5pt; font-weight: 600; margin-left: 4px; }
+  ol.tomas { padding-left: 0; list-style: none; counter-reset: toma; }
+</style>
+</head>
+<body>
+
+<!-- ============================ PORTADA / REPARTO ============================ -->
+<h1>Guion del video – Pedidos360</h1>
+<p class="sub">Evaluación 2 · DSY1107 Desarrollo Cloud Native I · Mensajería asíncrona con RabbitMQ</p>
+
+<p>Video de <b>unos 9:50 minutos</b> en tres partes. Cada integrante graba la suya por separado (pantalla + voz) y Sebastián las une en este orden. La pauta pide entre 5 y 10 minutos.</p>
+
+<table>
+  <tr><th>Parte</th><th>Quién</th><th>Duración</th><th>Qué cubre</th><th>Archivo</th></tr>
+  <tr><td>1</td><td>Integrante 2</td><td>2:29 (grabada)</td><td>Problema, arquitectura, flujo de un pedido y diseño de seguridad (JWT en dos capas)</td><td><code>parte1-integrante2.mp4</code></td></tr>
+  <tr><td>2</td><td>Sebastián</td><td>máximo 3:00</td><td>Demo en vivo: Entra ID, AWS (EC2, RDS, API Gateway), login, pedido, rechazo de JWT, docker compose, clúster, exchanges, colas y DLQ</td><td><code>parte2-sebastian.mp4</code></td></tr>
+  <tr><td>3</td><td>Integrante 3</td><td>4:30 (grabada)</td><td>Código: configuración centralizada, beans por caso de uso, consumidores por dominio, ACK/NACK/DLQ, administrador REST con validación, pruebas y cierre</td><td><code>parte3-integrante3.mp4</code></td></tr>
+</table>
+
+<h3 class="sec">Cómo grabar y unir</h3>
+<ul>
+  <li><b>Grabar:</b> Win + Alt + R (grabador de Windows), OBS, o una reunión de Teams/Zoom grabada compartiendo pantalla. MP4, 1080p, micrófono cerca, sin música.</li>
+  <li><b>Pantalla:</b> navegador o PDF a pantalla completa, zoom 125 % para que se lea, notificaciones silenciadas.</li>
+  <li><b>Errores:</b> no repitan todo. Pausen dos segundos y retomen desde el inicio del bloque; el error se corta al unir.</li>
+  <li><b>Unir:</b> Clipchamp (viene con Windows): importar las tres partes, ponerlas en orden y exportar en 1080p.</li>
+  <li>Integrante 2 e Integrante 3 <b>no necesitan</b> AWS, Azure ni el código instalado: todo lo que muestran está en este PDF. La demo en vivo es solo de Sebastián porque el laboratorio de AWS y el tenant de Entra ID están en su cuenta.</li>
+</ul>
+
+<h3 class="sec">Requisitos de la pauta (EP4) y dónde se muestran</h3>
+<table>
+  <tr><th>Requisito de la presentación</th><th>Dónde</th></tr>
+  <tr><td>1. Instancia del API Manager en la nube</td><td>Parte 2, toma 2</td></tr>
+  <tr><td>2. Configuración del API Manager hacia los endpoints del backend</td><td>Parte 2, toma 2</td></tr>
+  <tr><td>3. Frontend consume los endpoints a través del API Manager</td><td>Parte 2, toma 4</td></tr>
+  <tr><td>4. El API Manager valida JWT: rechaza inválidos y acepta correctos</td><td>Parte 2, tomas 4 y 5</td></tr>
+  <tr><td>5. Tenant en IDaaS y usuarios registrados</td><td>Parte 2, toma 1</td></tr>
+  <tr><td>6. Frontend usa OAuth 2.0 / OpenID Connect y obtiene un JWT válido</td><td>Parte 2, toma 3</td></tr>
+  <tr><td>7. Backend y frontend desplegados, activos e integrados en la nube</td><td>Parte 2, tomas 2 y 4</td></tr>
+  <tr><td>8. Dos nodos RabbitMQ en clúster</td><td>Parte 2, toma 7 · Parte 1, bloque 5</td></tr>
+  <tr><td>9. Tres colas con sus DLQ funcionando</td><td>Parte 2, tomas 7 y 8 · Parte 3, bloques 3 y 5</td></tr>
+  <tr><td>10. Exchanges de tipo direct y topic</td><td>Parte 2, toma 7 · Parte 1, bloque 3</td></tr>
+  <tr><td>11. docker-compose levantando RabbitMQ en la nube</td><td>Parte 2, toma 6</td></tr>
+</table>
+
+<!-- ============================ ARQUITECTURA ============================ -->
+<div class="pagina diagrama">
+  <h2>Arquitectura</h2>
+  <p>El backend publica un evento (topic) y un comando (direct); el procesador consume las tres colas y lo que no puede procesar termina, vía el DLX, en la DLQ de su cola. Este diagrama es lo que muestran la Parte 1 y el bloque 1 de la Parte 3.</p>
+  <img src="arquitectura.png" alt="Diagrama de arquitectura de Pedidos360">
+</div>
+
+<!-- ============================ PARTE 1 ============================ -->
+<div class="pagina">
+<h2>Parte 1 – Integrante 2: arquitectura y seguridad (2:00 – 2:30)</h2>
+<p><b>En pantalla:</b> el diagrama de la página de Arquitectura, a pantalla completa. Señala con el mouse cada caja cuando la nombres.</p>
+
+<div class="bloque">
+  <h4>1. Presentación <span class="tiempo">· 15 s</span></h4>
+  <p class="muestra">Muestra: el diagrama completo.</p>
+  <p class="di">"Hola, somos el equipo de Pedidos360. Les vamos a mostrar cómo incorporamos mensajería asíncrona con RabbitMQ al sistema que construimos en la evaluación anterior. Yo explico la arquitectura, Sebastián muestra la demo en la nube y [nombre del Integrante 3] explica el código."</p>
+</div>
+<div class="bloque">
+  <h4>2. Punto de partida <span class="tiempo">· 20 s</span></h4>
+  <p class="muestra">Señala: Microsoft Entra ID, Frontend Angular y API Gateway (fila de arriba) y Amazon RDS.</p>
+  <p class="di">"Pedidos360 ya tenía un frontend en Angular con inicio de sesión en Microsoft Entra ID, un backend en Spring Boot con base de datos MySQL en Amazon RDS, y un API Gateway en AWS como API Manager. Ahora, al crear un pedido, hay tareas que no deben hacer esperar al usuario: avisar al cliente, generar un ticket y generar el comprobante."</p>
+</div>
+<div class="bloque">
+  <h4>3. Flujo de un pedido <span class="tiempo">· 45 s</span></h4>
+  <p class="muestra">Señala: backend → pedidos.events.exchange → notificaciones.queue y tickets.queue; luego pedidos.tasks.exchange → documentos.queue; al final procesador-service.</p>
+  <p class="di">"El usuario crea el pedido en Angular. El API Gateway valida el token y lo envía al backend, que guarda el pedido en RDS y publica dos mensajes en RabbitMQ. El primero es el evento <code>pedido.creado</code>, que va a un exchange de tipo <b>topic</b>: la cola de notificaciones está enlazada con el patrón <code>pedido.*</code>, así que recibe cualquier evento de pedido, y la cola de tickets solo con <code>pedido.creado</code>. El segundo es el comando <code>documento.generar</code>, que va a un exchange de tipo <b>direct</b> y llega solo a la cola de documentos, por coincidencia exacta. Un tercer microservicio, el procesador, consume las tres colas."</p>
+</div>
+<div class="bloque">
+  <h4>4. Qué pasa cuando algo falla <span class="tiempo">· 30 s</span></h4>
+  <p class="muestra">Señala: procesador-service → pedidos.dlx → las tres DLQ (las cajas en color).</p>
+  <p class="di">"Si el procesamiento falla por algo transitorio, el procesador reintenta tres veces con espera creciente de 1 y 2 segundos. Si sigue fallando, o si el error es permanente como un dato inválido, rechaza el mensaje y RabbitMQ lo reenvía al Dead Letter Exchange, que lo deja en la DLQ de esa cola. Cada DLQ guarda los mensajes hasta 24 horas y máximo 10.000. Y si RabbitMQ estuviera caído, el pedido igual se guarda: la mensajería no rompe la lógica existente."</p>
+</div>
+<div class="bloque">
+  <h4>5. Administración e infraestructura <span class="tiempo">· 20 s</span></h4>
+  <p class="muestra">Señala: rabbit-admin-service, el recuadro "Clúster RabbitMQ (2 nodos)" y el recuadro de la EC2.</p>
+  <p class="di">"Agregamos un microservicio administrador con una API REST para crear y eliminar colas, exchanges y bindings, y para monitorear las DLQ. RabbitMQ corre como un clúster de dos nodos levantado con docker compose en una instancia EC2."</p>
+</div>
+<div class="bloque">
+  <h4>6. Seguridad <span class="tiempo">· 20 s</span></h4>
+  <p class="muestra">Señala: Microsoft Entra ID y API Gateway.</p>
+  <p class="di">"El token JWT de Entra ID se valida en dos capas: primero en el API Gateway, con un autorizador JWT que revisa el emisor y la audiencia; después en cada microservicio, que revisa firma, emisor, audiencia, vigencia y roles. Crear pedidos exige el rol Cliente y modificar RabbitMQ exige el rol Admin."</p>
+</div>
+<div class="bloque">
+  <h4>7. Cierre y traspaso <span class="tiempo">· 5 s</span></h4>
+  <p class="di">"Ahora Sebastián les muestra todo funcionando en la nube."</p>
+</div>
+</div>
+
+<!-- ============================ PARTE 2 ============================ -->
+<div class="pagina">
+<h2>Parte 2 – Sebastián: demo en vivo en AWS (máximo 3:00)</h2>
+<p class="nota">Direcciones del despliegue del 25 de octubre de 2026. Si el laboratorio se reinicia, la IP de la EC2 y el API Gateway cambian (<code>infra/aws/README.md</code>).</p>
+<h3 class="sec">Antes de grabar</h3>
+<table class="datos">
+  <tr><td>Frontend</td><td>https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com</td></tr>
+  <tr><td>Consola RabbitMQ</td><td>http://100.30.255.138:15672 · usuario y clave en <code>infra/aws/.env.cloud</code> (solo abre desde tu IP)</td></tr>
+  <tr><td>Decodificar el token</td><td>https://jwt.ms</td></tr>
+</table>
+<ul class="check">
+  <li><b>Entra ID:</b> Pedidos360-Web → Authentication → "+ Agregar URI de redireccionamiento" → Aplicación de página única → <code>https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com</code> (sin barra final). La URL anterior ya no existe.</li>
+  <li>Inicia sesión una vez en el frontend y crea un pedido de prueba. Si da 403, asigna el rol Cliente en Enterprise applications → Pedidos360-API → Users and groups.</li>
+  <li>Deja estas pestañas abiertas, en este orden: Entra ID (Información general) · EC2 · RDS · API Gateway <code>pedidos360-api</code> → Routes · frontend (con sesión iniciada) · jwt.ms · consola RabbitMQ (con sesión iniciada).</li>
+  <li>Abre la terminal de la nube: EC2 → <code>pedidos360-ec2</code> → Conectar → Session Manager → Conectar.</li>
+  <li>Abre PowerShell con este comando ya escrito (sin Enter): <code>curl.exe -i https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com/api/pedidos</code></li>
+  <li>Las DLQ están en 0. Si haces pruebas antes y quedan mensajes: consola RabbitMQ → cada <code>*.dlq</code> → Purge Messages.</li>
+  <li>Graba antes de las 17:52 hora de Chile (13:52 hora del lab, fin de la sesión). Si el lab se reinicia, la IP y el gateway cambian.</li>
+</ul>
+
+<h3 class="sec">Tomas (2:50 en total)</h3>
+
+<div class="bloque"><h4>1. Entra ID <span class="tiempo">· 15 s</span><span class="req">req. 5</span></h4>
+  <p class="muestra">Información general (Id. de inquilino) → Usuarios (2) → Registros de aplicaciones (Pedidos360-API y Pedidos360-Web).</p>
+  <p class="di">"Este es nuestro tenant de Microsoft Entra ID, con dos usuarios y las aplicaciones del frontend y de la API, que define los roles Cliente y Admin."</p></div>
+
+<div class="bloque"><h4>2. Infraestructura en AWS <span class="tiempo">· 25 s</span><span class="req">req. 1, 2 y 7</span></h4>
+  <p class="muestra">EC2 <code>pedidos360-ec2</code> en ejecución → RDS <code>pedidos360-db</code> disponible → API Gateway <code>pedidos360-api</code> → Routes (las rutas <code>/api/...</code> con JWT) → Authorization (autorizador <code>entra-jwt</code>).</p>
+  <p class="di">"En AWS tenemos la EC2 con RabbitMQ y los tres microservicios, la base de datos en RDS y el API Gateway como API Manager: cada ruta tiene un autorizador JWT con el emisor y la audiencia de Entra ID."</p></div>
+
+<div class="bloque"><h4>3. Login y JWT <span class="tiempo">· 25 s</span><span class="req">req. 6</span></h4>
+  <p class="muestra">Frontend → Iniciar sesión (o muestra que ya estás dentro) → F12 → Network → petición <code>pedidos</code> → copia el header <code>Authorization</code> sin "Bearer" → pégalo en jwt.ms.</p>
+  <p class="di">"El frontend inicia sesión con OpenID Connect y PKCE. Entra ID entrega este JWT: emisor nuestro tenant, audiencia la API y el rol Cliente."</p></div>
+
+<div class="bloque"><h4>4. Pedido a través del API Manager <span class="tiempo">· 15 s</span><span class="req">req. 3 y 4</span></h4>
+  <p class="muestra">Crea un pedido (Ana · Café 1 kg · 15990) → aparece en la tabla; en Network el POST va a <code>6iqkstpi9c.execute-api...</code> con 200.</p>
+  <p class="di">"El frontend llama al backend a través del API Gateway; con token válido la petición pasa y el pedido se guarda."</p></div>
+
+<div class="bloque"><h4>5. Rechazo sin token <span class="tiempo">· 10 s</span><span class="req">req. 4</span></h4>
+  <p class="muestra">En PowerShell, Enter al comando ya escrito → <code>HTTP/1.1 401 Unauthorized</code>.</p>
+  <p class="di">"Sin un token válido, el API Gateway responde 401 y la petición no llega al backend."</p></div>
+
+<div class="bloque"><h4>6. docker compose en la nube <span class="tiempo">· 15 s</span><span class="req">req. 11</span></h4>
+  <p class="muestra">En Session Manager:</p>
+<pre>cd /opt/pedidos360 &amp;&amp; sudo docker compose ps</pre>
+  <p class="di">"Todo corre con docker compose en la EC2: los dos nodos de RabbitMQ y los tres microservicios."</p></div>
+
+<div class="bloque"><h4>7. RabbitMQ: clúster, exchanges y colas <span class="tiempo">· 30 s</span><span class="req">req. 8, 10 y 9</span></h4>
+  <p class="muestra">Overview → tabla Nodes (<code>rabbit@rabbit1</code> y <code>rabbit@rabbit2</code>) → Exchanges (<code>pedidos.events.exchange</code> topic, <code>pedidos.tasks.exchange</code> direct, <code>pedidos.dlx</code>) → Queues (3 colas + 3 DLQ, todas en 0).</p>
+  <p class="di">"RabbitMQ corre en un clúster de dos nodos. Tenemos un exchange topic para eventos, uno direct para comandos y el DLX. Cada una de las tres colas tiene su DLQ, con retención de 24 horas."</p></div>
+
+<div class="bloque"><h4>8. Una DLQ funcionando en vivo <span class="tiempo">· 30 s</span><span class="req">req. 9</span></h4>
+  <p class="muestra">En el frontend crea un pedido con descripción <code>Prueba #FAIL-TICKET</code> → en Session Manager:</p>
+<pre>sudo docker logs --tail 6 pedidos360-procesador
+<span class="c">→ intento 1/3 ... intento 2/3 ... NACK -&gt; DLQ</span></pre>
+  <p class="muestra">→ en RabbitMQ, Queues: <code>tickets.dlq</code> con 1 mensaje.</p>
+  <p class="di">"Este pedido simula que el servicio de tickets está caído: el procesador reintenta tres veces y lo rechaza, y el mensaje queda en la DLQ de tickets. La notificación y el documento del mismo pedido sí se procesaron."</p></div>
+
+<div class="bloque"><h4>9. Traspaso <span class="tiempo">· 5 s</span></h4>
+  <p class="di">"Ahora [nombre del Integrante 3] explica cómo está hecho esto en el código."</p></div>
+
+</div>
+
+<!-- ============================ PARTE 3 ============================ -->
+<div class="pagina">
+<h2>Parte 3 – Integrante 3: código de mensajería (2:00 – 2:30)</h2>
+<p><b>En pantalla:</b> bloque 1, el diagrama de Arquitectura; bloques 2 a 6, el fragmento de código de cada bloque (copias recortadas del código real). Si el repositorio está en GitHub, se pueden mostrar ahí los mismos archivos; el texto no cambia.</p>
+
+<div class="bloque">
+  <h4>1. Estructura <span class="tiempo">· 15 s</span></h4>
+  <p class="muestra">Muestra: el diagrama. Señala backend, procesador-service y rabbit-admin-service.</p>
+  <p class="di">"El backend son tres microservicios Spring Boot: <code>backend</code>, que guarda el pedido y publica los mensajes; <code>procesador-service</code>, con los consumidores; y <code>rabbit-admin-service</code>, que administra RabbitMQ por API REST."</p>
+</div>
+
+<div class="bloque">
+  <h4>2. Nombres centralizados <span class="tiempo">· 25 s</span></h4>
+  <p class="muestra">Muestra: <code>procesador-service/src/main/resources/application.yml</code></p>
+<pre>pedidos360:
+  messaging:
+    exchanges:
+      events: pedidos.events.exchange        <span class="c"># TOPIC</span>
+      tasks: pedidos.tasks.exchange          <span class="c"># DIRECT</span>
+      dead-letter: pedidos.dlx               <span class="c"># DIRECT - DLX común</span>
+    queues:
+      tickets:
+        name: tickets.queue
+        binding-key: pedido.creado
+        dlq: tickets.dlq
+        dead-letter-key: tickets.dead
+    dead-letter:                             <span class="c"># retención de las DLQ</span>
+      retention-ms: 86400000                 <span class="c"># 24 h</span>
+      max-length: 10000
+    retry:
+      max-attempts: 3
+      initial-interval-ms: 1000
+      multiplier: 2.0</pre>
+  <p class="di">"Todos los nombres de colas, exchanges y bindings viven en el application.yml de cada servicio y se leen con <code>@ConfigurationProperties</code>. Ninguna clase escribe un nombre a mano."</p>
+</div>
+
+<div class="bloque">
+  <h4>3. Beans por caso de uso <span class="tiempo">· 25 s</span></h4>
+  <p class="muestra">Muestra: <code>config/TicketsTopologyConfig.java</code> (hay una igual para notificaciones y otra para documentos).</p>
+<pre>@Configuration
+public class TicketsTopologyConfig {
+    <span class="c">// cola principal, con x-dead-letter-exchange</span>
+    @Bean Queue ticketsQueue(MessagingProperties props) {
+        return TopologySupport.mainQueue(props.queues().tickets(), props);
+    }
+    <span class="c">// DLQ, con TTL y max-length (retención)</span>
+    @Bean Queue ticketsDlq(MessagingProperties props) {
+        return TopologySupport.deadLetterQueue(props.queues().tickets(), props);
+    }
+    @Bean Binding ticketsBinding(@Qualifier("ticketsQueue") Queue queue,
+            TopicExchange eventsExchange, MessagingProperties props) {
+        return BindingBuilder.bind(queue).to(eventsExchange)
+                .with(props.queues().tickets().bindingKey());
+    }
+    @Bean Binding ticketsDlqBinding(@Qualifier("ticketsDlq") Queue dlq,
+            @Qualifier("deadLetterExchange") DirectExchange dlx,
+            MessagingProperties props) {
+        return BindingBuilder.bind(dlq).to(dlx)
+                .with(props.queues().tickets().deadLetterKey());
+    }
+}</pre>
+  <p class="di">"La configuración de mensajería está aislada en el paquete config: un archivo por caso de uso con su cola, su DLQ y sus bindings."</p>
+</div>
+
+<div class="bloque">
+  <h4>4. Consumidores por dominio <span class="tiempo">· 20 s</span></h4>
+  <p class="muestra">Muestra: <code>tickets/TicketConsumer.java</code></p>
+<pre>@RabbitListener(queues = "${pedidos360.messaging.queues.tickets.name}")
+public void onMessage(Message message, Channel channel) {
+    processor.process(NAME, message, channel,
+            PedidoCreadoEvent.class, service::generar);
+}</pre>
+  <p class="di">"Hay un paquete por dominio: notificaciones, tickets y documentos. El consumidor solo recibe el mensaje; la lógica de negocio está en <code>TicketService</code>, que no conoce RabbitMQ."</p>
+</div>
+
+<div class="bloque">
+  <h4>5. ACK y manejo de errores <span class="tiempo">· 40 s · el bloque más importante de la pauta</span></h4>
+  <p class="muestra">Muestra: <code>messaging/AckingMessageProcessor.java</code>, con <code>acknowledge-mode: manual</code> y <code>prefetch: 1</code>.</p>
+<pre>while (true) {
+    attempt++;
+    try {
+        handler.accept(payload);
+        channel.basicAck(tag, false);              <span class="c">// éxito</span>
+        return;
+    } catch (PermanentProcessingException ex) {
+        channel.basicNack(tag, false, false);      <span class="c">// permanente -&gt; DLQ</span>
+        return;
+    } catch (RuntimeException ex) {                <span class="c">// recuperable</span>
+        if (attempt &gt;= retry.maxAttempts()) {
+            channel.basicNack(tag, false, false);  <span class="c">// agotado -&gt; DLQ</span>
+            return;
+        }
+        sleeper.sleep(delay);                      <span class="c">// espera 1 s, 2 s</span>
+        delay = Math.min((long) (delay * retry.multiplier()),
+                retry.maxIntervalMs());
+    }
+}</pre>
+  <p class="di">"Cada consumidor confirma de forma explícita. Si el procesamiento sale bien hace ACK. Si el error es permanente, como un JSON inválido, hace NACK sin reencolar y el mensaje va directo a la DLQ. Si es recuperable, reintenta con espera creciente y, al agotar los tres intentos, lo manda a la DLQ. Nunca reencolamos en bucle, y un mensaje duplicado se confirma sin reprocesarlo."</p>
+</div>
+
+<div class="bloque">
+  <h4>6. Microservicio administrador <span class="tiempo">· 30 s</span></h4>
+  <p class="muestra">Endpoints: <code>POST /api/queues</code>, <code>GET</code> y <code>DELETE /api/queues/{name}</code>, <code>POST</code> y <code>DELETE /api/exchanges</code>, <code>POST</code> y <code>DELETE /api/bindings</code>, <code>GET /api/monitoring/queues</code>. Muestra: <code>dto/QueueCreateRequest.java</code></p>
+<pre>public record QueueCreateRequest(
+        @NotBlank(message = "name es obligatorio")
+        @Pattern(regexp = ValidationPatterns.BROKER_NAME,
+                 message = ValidationPatterns.BROKER_NAME_MESSAGE)
+        String name,
+        Boolean durable,
+        Boolean autoDelete,
+        String deadLetterExchange,
+        String deadLetterRoutingKey,
+        @PositiveOrZero(message = "messageTtlMs no puede ser negativo")
+        Long messageTtlMs,
+        @Positive(message = "maxLength debe ser mayor que 0")
+        Long maxLength) { }</pre>
+  <p class="di">"Toda la lógica de administración está en <code>RabbitAdminService</code>; los controladores solo llaman a sus métodos. Las entradas se validan con DTO: no se puede crear una cola con nombre vacío, con caracteres inválidos ni con el prefijo reservado <code>amq.</code>. Los errores vuelven en JSON con 400, 404 o 409, y modificar RabbitMQ exige el rol Admin."</p>
+</div>
+
+<div class="bloque">
+  <h4>7. Pruebas <span class="tiempo">· 10 s</span></h4>
+  <p class="di">"El proyecto tiene 36 pruebas automáticas: el flujo de ACK, NACK y reintentos, las validaciones y la seguridad del administrador, y el publicador del backend."</p>
+</div>
+
+<div class="bloque">
+  <h4>8. Cierre <span class="tiempo">· 15 s</span></h4>
+  <p class="di">"En resumen, Pedidos360 ahora procesa notificaciones, tickets y documentos de forma asíncrona con RabbitMQ en un clúster de dos nodos, con reintentos, DLQ y monitoreo, sin afectar la lógica que ya existía. Muchas gracias."</p>
+</div>
+</div>
+
+<!-- ============================ REVISIÓN Y PREGUNTAS ============================ -->
+<div class="pagina">
+<h2>Revisión antes de enviar (todos)</h2>
+<ul class="check">
+  <li>El video completo no pasa de 10:00 (Parte 2 como máximo 3:00).</li>
+  <li>La voz se entiende de principio a fin, sin ruido de fondo.</li>
+  <li>El diagrama o el código se leen en el video (zoom si hace falta).</li>
+  <li>No aparecen chats, correos, contraseñas ni otras pestañas.</li>
+  <li>Se usan los nombres técnicos tal como están: exchange, binding, DLX, DLQ, ACK, NACK, JWT.</li>
+  <li>Cada parte termina con su frase de traspaso o de cierre.</li>
+  <li>El archivo tiene el nombre del reparto y ya se lo enviaron a Sebastián.</li>
+</ul>
+
+<h3 class="sec">Preguntas probables del docente</h3>
+<p class="nota">La pauta pide que cada integrante pueda fundamentar el diseño: los tres deben leer esta tabla.</p>
+<table>
+  <tr><th style="width:32%">Pregunta</th><th>Respuesta corta</th></tr>
+  <tr><td>¿Diferencia entre DLX y DLQ?</td><td>El DLX es un exchange que enruta los mensajes rechazados; la DLQ es la cola donde quedan guardados para revisarlos.</td></tr>
+  <tr><td>¿Por qué ACK manual?</td><td>Para que el consumidor decida el destino de cada mensaje: ACK si salió bien, reintento si es transitorio, NACK sin reencolar hacia la DLQ si no tiene arreglo.</td></tr>
+  <tr><td>¿Cómo evitan un bucle infinito de reintentos?</td><td>Máximo 3 intentos con espera de 1 s y 2 s; después NACK con <code>requeue=false</code> y el mensaje sale de la cola principal.</td></tr>
+  <tr><td>¿Por qué un exchange topic y uno direct?</td><td>Topic para eventos que varias colas escuchan por patrón (<code>pedido.*</code>); direct para comandos con un solo destinatario por coincidencia exacta (<code>documento.generar</code>).</td></tr>
+  <tr><td>¿Qué pasa si RabbitMQ se cae?</td><td>El pedido se guarda igual en la base de datos; el publicador registra el error en el log y no afecta la respuesta al usuario.</td></tr>
+  <tr><td>¿Las colas están replicadas en los dos nodos?</td><td>No: son colas clásicas y viven en un nodo. Para alta disponibilidad real usaríamos quorum queues con 3 nodos; con 2, perder uno detiene la cola.</td></tr>
+  <tr><td>¿Qué retención tienen las DLQ?</td><td>24 horas (<code>x-message-ttl</code>) y máximo 10.000 mensajes (<code>x-max-length</code>).</td></tr>
+  <tr><td>¿Cómo saben por qué un mensaje llegó a la DLQ?</td><td>Por el log del procesador (<code>NACK -&gt; DLQ ... motivo=</code>) y por el header <code>x-death</code> del mensaje, que dice la cola de origen y la razón.</td></tr>
+  <tr><td>¿Y si un mensaje llega dos veces?</td><td>El procesador recuerda el <code>messageId</code> de los ya procesados y confirma el duplicado sin repetir el trabajo.</td></tr>
+  <tr><td>¿Dónde se valida el JWT?</td><td>Dos veces: en el autorizador JWT del API Gateway (emisor y audiencia) y en cada microservicio con Spring Security (firma, emisor, audiencia, vigencia y roles).</td></tr>
+  <tr><td>¿Para qué <code>@ConfigurationProperties</code>?</td><td>Lee los nombres del application.yml en un objeto tipado, así ningún nombre queda escrito a mano en el código.</td></tr>
+  <tr><td>¿Cómo simulan los errores?</td><td>Con marcadores en la descripción del pedido (<code>#FAIL-TICKET</code>, <code>#INVALID-NOTIFICACION</code>, <code>#FLAKY-TICKET</code>), activados solo por configuración para la demostración.</td></tr>
+</table>
+</div>
+
+</body>
+</html>

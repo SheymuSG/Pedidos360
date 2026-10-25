@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guion Parte 3 – Integrante 3</title>
+<style>
+  @page { size: A4; margin: 16mm 16mm 18mm; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; color: #1f2328; font-size: 12.5pt; line-height: 1.45; margin: 0; }
+  h1 { font-size: 20pt; margin: 0 0 4px; }
+  .sub { color: #57606a; margin: 0 0 14px; }
+  h2 { font-size: 14pt; margin: 22px 0 8px; border-bottom: 1px solid #d0d7de; padding-bottom: 4px; }
+  table.datos { border-collapse: collapse; width: 100%; margin: 6px 0 4px; }
+  table.datos td { border: 1px solid #d0d7de; padding: 6px 10px; vertical-align: top; }
+  table.datos td:first-child { width: 30%; font-weight: 600; background: #f6f8fa; }
+  .bloque { border: 1px solid #d0d7de; border-radius: 8px; padding: 10px 14px; margin: 10px 0; break-inside: avoid; }
+  .bloque h3 { margin: 0 0 4px; font-size: 12.5pt; }
+  .tiempo { color: #57606a; font-weight: 400; }
+  .muestra { color: #57606a; font-size: 11pt; margin: 0 0 6px; }
+  .di { background: #f6f8fa; border-left: 4px solid #0969da; padding: 8px 12px; margin: 8px 0 0; }
+  code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 11pt; background: #eff1f3; padding: 0 3px; border-radius: 3px; }
+  pre { font-family: Consolas, "Cascadia Mono", monospace; font-size: 10.5pt; line-height: 1.35; background: #0d1117; color: #e6edf3; padding: 10px 12px; border-radius: 6px; margin: 4px 0 0; white-space: pre-wrap; }
+  .c { color: #8b949e; }
+  ul.check { list-style: none; padding-left: 0; }
+  ul.check li::before { content: "\2610  "; }
+  .diagrama { break-before: page; text-align: center; }
+  .diagrama img { width: 100%; max-height: 245mm; object-fit: contain; }
+  .nota { color: #57606a; font-size: 11pt; }
+</style>
+</head>
+<body>
+
+<h1>Parte 3 – Código de mensajería</h1>
+<p class="sub">Video Pedidos360 · Evaluación 2 (DSY1107) · Integrante 3 · cierra el video</p>
+
+<table class="datos">
+  <tr><td>Duración</td><td>2:00 – 2:30 minutos</td></tr>
+  <tr><td>Qué se ve en pantalla</td><td>Bloque 1: el diagrama de la última página. Bloques 2 a 6: el fragmento de código de cada bloque (son copias del código real, recortadas). Haz zoom para que se lea.</td></tr>
+  <tr><td>Cómo grabar</td><td>Win + Alt + R (grabador de Windows), OBS, o una reunión de Teams/Zoom grabada compartiendo pantalla. 1080p, con voz, sin música.</td></tr>
+  <tr><td>Entrega</td><td>Archivo <code>parte3-integrante3.mp4</code> enviado a Sebastián.</td></tr>
+</table>
+<p class="nota">No necesitas AWS ni el proyecto instalado. Si Sebastián sube el repositorio a GitHub, puedes mostrar ahí los mismos archivos; el texto no cambia. Si te equivocas, pausa dos segundos y repite desde el inicio de ese bloque.</p>
+
+<h2>Guion</h2>
+
+<div class="bloque">
+  <h3>1. Estructura <span class="tiempo">· 15 s</span></h3>
+  <p class="muestra">Muestra: el diagrama (última página). Señala backend, procesador-service y rabbit-admin-service.</p>
+  <p class="di">"El backend son tres microservicios Spring Boot: <code>backend</code>, que guarda el pedido y publica los mensajes; <code>procesador-service</code>, con los consumidores; y <code>rabbit-admin-service</code>, que administra RabbitMQ por API REST."</p>
+</div>
+
+<div class="bloque">
+  <h3>2. Nombres centralizados <span class="tiempo">· 25 s</span></h3>
+  <p class="muestra">Muestra: <code>procesador-service/src/main/resources/application.yml</code></p>
+<pre>pedidos360:
+  messaging:
+    exchanges:
+      events: pedidos.events.exchange        <span class="c"># TOPIC</span>
+      tasks: pedidos.tasks.exchange          <span class="c"># DIRECT</span>
+      dead-letter: pedidos.dlx               <span class="c"># DIRECT - DLX común</span>
+    queues:
+      tickets:
+        name: tickets.queue
+        binding-key: pedido.creado
+        dlq: tickets.dlq
+        dead-letter-key: tickets.dead
+    dead-letter:                             <span class="c"># retención de las DLQ</span>
+      retention-ms: 86400000                 <span class="c"># 24 h</span>
+      max-length: 10000
+    retry:
+      max-attempts: 3
+      initial-interval-ms: 1000
+      multiplier: 2.0</pre>
+  <p class="di">"Todos los nombres de colas, exchanges y bindings viven en el application.yml de cada servicio y se leen con <code>@ConfigurationProperties</code>. Ninguna clase escribe un nombre a mano."</p>
+</div>
+
+<div class="bloque">
+  <h3>3. Beans por caso de uso <span class="tiempo">· 25 s</span></h3>
+  <p class="muestra">Muestra: <code>config/TicketsTopologyConfig.java</code> (hay una igual para notificaciones y otra para documentos).</p>
+<pre>@Configuration
+public class TicketsTopologyConfig {
+    <span class="c">// cola principal, con x-dead-letter-exchange</span>
+    @Bean Queue ticketsQueue(MessagingProperties props) {
+        return TopologySupport.mainQueue(props.queues().tickets(), props);
+    }
+    <span class="c">// DLQ, con TTL y max-length (retención)</span>
+    @Bean Queue ticketsDlq(MessagingProperties props) {
+        return TopologySupport.deadLetterQueue(props.queues().tickets(), props);
+    }
+    @Bean Binding ticketsBinding(@Qualifier("ticketsQueue") Queue queue,
+            TopicExchange eventsExchange, MessagingProperties props) {
+        return BindingBuilder.bind(queue).to(eventsExchange)
+                .with(props.queues().tickets().bindingKey());
+    }
+    @Bean Binding ticketsDlqBinding(@Qualifier("ticketsDlq") Queue dlq,
+            @Qualifier("deadLetterExchange") DirectExchange dlx,
+            MessagingProperties props) {
+        return BindingBuilder.bind(dlq).to(dlx)
+                .with(props.queues().tickets().deadLetterKey());
+    }
+}</pre>
+  <p class="di">"La configuración de mensajería está aislada en el paquete config: un archivo por caso de uso con su cola, su DLQ y sus bindings."</p>
+</div>
+
+<div class="bloque">
+  <h3>4. Consumidores por dominio <span class="tiempo">· 20 s</span></h3>
+  <p class="muestra">Muestra: <code>tickets/TicketConsumer.java</code></p>
+<pre>@RabbitListener(queues = "${pedidos360.messaging.queues.tickets.name}")
+public void onMessage(Message message, Channel channel) {
+    processor.process(NAME, message, channel,
+            PedidoCreadoEvent.class, service::generar);
+}</pre>
+  <p class="di">"Hay un paquete por dominio: notificaciones, tickets y documentos. El consumidor solo recibe el mensaje; la lógica de negocio está en <code>TicketService</code>, que no conoce RabbitMQ."</p>
+</div>
+
+<div class="bloque">
+  <h3>5. ACK y manejo de errores <span class="tiempo">· 40 s · el bloque más importante de la pauta</span></h3>
+  <p class="muestra">Muestra: <code>messaging/AckingMessageProcessor.java</code>, con <code>acknowledge-mode: manual</code> y <code>prefetch: 1</code>.</p>
+<pre>while (true) {
+    attempt++;
+    try {
+        handler.accept(payload);
+        channel.basicAck(tag, false);              <span class="c">// éxito</span>
+        return;
+    } catch (PermanentProcessingException ex) {
+        channel.basicNack(tag, false, false);      <span class="c">// permanente -&gt; DLQ</span>
+        return;
+    } catch (RuntimeException ex) {                <span class="c">// recuperable</span>
+        if (attempt &gt;= retry.maxAttempts()) {
+            channel.basicNack(tag, false, false);  <span class="c">// agotado -&gt; DLQ</span>
+            return;
+        }
+        sleeper.sleep(delay);                      <span class="c">// espera 1 s, 2 s</span>
+        delay = Math.min((long) (delay * retry.multiplier()),
+                retry.maxIntervalMs());
+    }
+}</pre>
+  <p class="di">"Cada consumidor confirma de forma explícita. Si el procesamiento sale bien hace ACK. Si el error es permanente, como un JSON inválido, hace NACK sin reencolar y el mensaje va directo a la DLQ. Si es recuperable, reintenta con espera creciente y, al agotar los tres intentos, lo manda a la DLQ. Nunca reencolamos en bucle, y un mensaje duplicado se confirma sin reprocesarlo."</p>
+</div>
+
+<div class="bloque">
+  <h3>6. Microservicio administrador <span class="tiempo">· 30 s</span></h3>
+  <p class="muestra">Endpoints: <code>POST /api/queues</code>, <code>GET</code> y <code>DELETE /api/queues/{name}</code>, <code>POST</code> y <code>DELETE /api/exchanges</code>, <code>POST</code> y <code>DELETE /api/bindings</code>, <code>GET /api/monitoring/queues</code>. Muestra: <code>dto/QueueCreateRequest.java</code></p>
+<pre>public record QueueCreateRequest(
+        @NotBlank(message = "name es obligatorio")
+        @Pattern(regexp = ValidationPatterns.BROKER_NAME,
+                 message = ValidationPatterns.BROKER_NAME_MESSAGE)
+        String name,
+        Boolean durable,
+        Boolean autoDelete,
+        String deadLetterExchange,
+        String deadLetterRoutingKey,
+        @PositiveOrZero(message = "messageTtlMs no puede ser negativo")
+        Long messageTtlMs,
+        @Positive(message = "maxLength debe ser mayor que 0")
+        Long maxLength) { }</pre>
+  <p class="di">"Toda la lógica de administración está en <code>RabbitAdminService</code>; los controladores solo llaman a sus métodos. Las entradas se validan con DTO: no se puede crear una cola con nombre vacío, con caracteres inválidos ni con el prefijo reservado <code>amq.</code>. Los errores vuelven en JSON con 400, 404 o 409, y modificar RabbitMQ exige el rol Admin."</p>
+</div>
+
+<div class="bloque">
+  <h3>7. Pruebas <span class="tiempo">· 10 s</span></h3>
+  <p class="di">"El proyecto tiene 36 pruebas automáticas: el flujo de ACK, NACK y reintentos, las validaciones y la seguridad del administrador, y el publicador del backend."</p>
+</div>
+
+<div class="bloque">
+  <h3>8. Cierre <span class="tiempo">· 15 s</span></h3>
+  <p class="di">"En resumen, Pedidos360 ahora procesa notificaciones, tickets y documentos de forma asíncrona con RabbitMQ en un clúster de dos nodos, con reintentos, DLQ y monitoreo, sin afectar la lógica que ya existía. Muchas gracias."</p>
+</div>
+
+<h2>Antes de enviar</h2>
+<ul class="check">
+  <li>Dura entre 2:00 y 2:30.</li>
+  <li>La voz se entiende de principio a fin, sin ruido de fondo.</li>
+  <li>El código se lee en el video (haz zoom si hace falta).</li>
+  <li>No aparecen chats, correos ni otras pestañas.</li>
+  <li>Termina con "Muchas gracias."</li>
+  <li>El archivo se llama <code>parte3-integrante3.mp4</code> y ya se lo enviaste a Sebastián.</li>
+</ul>
+
+<h2>Si el docente te pregunta</h2>
+<table class="datos">
+  <tr><td>¿Por qué ACK manual?</td><td>Para que el consumidor decida el destino de cada mensaje: ACK si salió bien, reintento si es transitorio, NACK sin reencolar hacia la DLQ si no tiene arreglo.</td></tr>
+  <tr><td>¿Cómo evitan un bucle infinito?</td><td>Máximo 3 intentos con espera de 1 s y 2 s; después NACK con <code>requeue=false</code> y el mensaje sale de la cola principal.</td></tr>
+  <tr><td>¿Diferencia entre DLX y DLQ?</td><td>El DLX es un exchange que enruta los mensajes rechazados; la DLQ es la cola donde quedan guardados (24 h, máximo 10.000).</td></tr>
+  <tr><td>¿Para qué <code>@ConfigurationProperties</code>?</td><td>Lee los nombres del application.yml en un objeto tipado, así ningún nombre queda escrito a mano en el código.</td></tr>
+  <tr><td>¿Y si un mensaje llega dos veces?</td><td>El procesador recuerda el <code>messageId</code> de los ya procesados y confirma el duplicado sin repetir el trabajo.</td></tr>
+  <tr><td>¿Y si RabbitMQ se cae?</td><td>El pedido se guarda igual en la base de datos; el error queda en el log y no afecta la respuesta al usuario.</td></tr>
+</table>
+
+<div class="diagrama">
+  <img src="arquitectura.png" alt="Diagrama de arquitectura de Pedidos360">
+</div>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+
+=================================================================
+0. TOPOLOGIA declarada por procesador-service en el cluster
+=================================================================
+
+--- Exchanges
+  pedidos.dlx                  tipo=direct   durable=true
+  pedidos.events.exchange      tipo=topic    durable=true
+  pedidos.tasks.exchange       tipo=direct   durable=true
+
+--- Bindings
+  pedidos.dlx                  --[documentos.dead]--> documentos.dlq
+  pedidos.dlx                  --[notificaciones.dead]--> notificaciones.dlq
+  pedidos.dlx                  --[tickets.dead]--> tickets.dlq
+  pedidos.events.exchange      --[pedido.*]--> notificaciones.queue
+  pedidos.events.exchange      --[pedido.creado]--> tickets.queue
+  pedidos.tasks.exchange       --[documento.generar]--> documentos.queue
+
+--- Colas (argumentos de DLX / retencion)
+  documentos.dlq           durable=true {"x-max-length":10000,"x-message-ttl":86400000,"x-queue-type":"classic"}
+  documentos.queue         durable=true {"x-dead-letter-exchange":"pedidos.dlx","x-dead-letter-routing-key":"documentos.dead","x-queue-type":"classic"}
+  notificaciones.dlq       durable=true {"x-max-length":10000,"x-message-ttl":86400000,"x-queue-type":"classic"}
+  notificaciones.queue     durable=true {"x-dead-letter-exchange":"pedidos.dlx","x-dead-letter-routing-key":"notificaciones.dead","x-queue-type":"classic"}
+  tickets.dlq              durable=true {"x-max-length":10000,"x-message-ttl":86400000,"x-queue-type":"classic"}
+  tickets.queue            durable=true {"x-dead-letter-exchange":"pedidos.dlx","x-dead-letter-routing-key":"tickets.dead","x-queue-type":"classic"}
+
+=================================================================
+1. SEGURIDAD del backend: sin token y con rol equivocado
+=================================================================
+
+--- POST /api/pedidos sin Authorization -> 401
+HTTP 401  {"path":"/api/pedidos","status":"401","message":"Token JWT ausente, invalido o expirado","timestamp":"2026-10-13T03:25:19.796143800Z","error":"Unauthorized"}
+
+--- POST /api/pedidos con token de rol Admin (se exige Cliente) -> 403
+HTTP 403  {"path":"/api/pedidos","status":"403","message":"El usuario autenticado no tiene el rol requerido para este recurso","timestamp":"2026-10-13T03:25:21.156095600Z","error":"Forbidden"}
+
+=================================================================
+2. FLUJO FELIZ: un pedido genera notificacion, ticket y documento
+=================================================================
+HTTP 200  {"cliente":"Ana Perez","descripcion":"Cafe de especialidad 1kg","fechaCreacion":"2026-10-13T00:25:22.0976112","id":6,"total":19990.0}
+
+=================================================================
+3. REINTENTO que se recupera (#FLAKY-TICKET: falla 2 veces, la 3a funciona)
+=================================================================
+HTTP 200  {"cliente":"Bruno Diaz","descripcion":"Pedido con falla transitoria #FLAKY-TICKET","fechaCreacion":"2026-10-13T00:25:27.729851","id":7,"total":19990.0}
+
+=================================================================
+4. REINTENTOS AGOTADOS -> DLQ (#FAIL-TICKET: 3 intentos con backoff 1s, 2s)
+=================================================================
+HTTP 200  {"cliente":"Carla Soto","descripcion":"Pedido con servicio caido #FAIL-TICKET","fechaCreacion":"2026-10-13T00:25:36.5431152","id":8,"total":19990.0}
+
+=================================================================
+5. ERROR PERMANENTE -> DLQ sin reintentos (#INVALID-NOTIFICACION)
+=================================================================
+HTTP 200  {"cliente":"Diego Mora","descripcion":"Pedido con dato invalido #INVALID-NOTIFICACION","fechaCreacion":"2026-10-13T00:25:47.564037","id":9,"total":19990.0}
+
+=================================================================
+6. ERROR EN LA COLA DIRECT -> DLQ (#FAIL-DOCUMENTO)
+=================================================================
+HTTP 200  {"cliente":"Elena Rojas","descripcion":"Pedido con disco lleno #FAIL-DOCUMENTO","fechaCreacion":"2026-10-13T00:25:54.0689933","id":10,"total":19990.0}
+
+=================================================================
+7. ESTADO de colas tras las pruebas (mensajes en cada DLQ)
+=================================================================
+COLA                        MENSAJES  CONSUMIDORES  NODO
+documentos.dlq              1         0             rabbit@rabbit1
+documentos.queue            0         1             rabbit@rabbit1
+notificaciones.dlq          1         0             rabbit@rabbit1
+notificaciones.queue        0         1             rabbit@rabbit1
+tickets.dlq                 1         0             rabbit@rabbit1
+tickets.queue               0         1             rabbit@rabbit1
+
+--- Contenido de tickets.dlq
+  payload : {"eventId":"5a4666e3-8a4b-445f-9622-e4b2df26d3d9","occurredAt":"2026-10-13T03:25:36.617630900Z","pedidoId":8,"cliente":"Carla Soto","descripcion":"Pedido con servicio caido #FAIL-TICKET","total":19990.0}
+  x-death : cola origen=tickets.queue razon=rejected exchange=pedidos.events.exchange routing-keys=["pedido.creado"]
+
+--- Contenido de notificaciones.dlq
+  payload : {"eventId":"4f778bcb-22bf-49e8-afcd-f2e060ec38ff","occurredAt":"2026-10-13T03:25:47.947501500Z","pedidoId":9,"cliente":"Diego Mora","descripcion":"Pedido con dato invalido #INVALID-NOTIFICACION","total":19990.0}
+  x-death : cola origen=notificaciones.queue razon=rejected exchange=pedidos.events.exchange routing-keys=["pedido.creado"]
+
+--- Contenido de documentos.dlq
+  payload : {"commandId":"94a893ce-9cd4-447c-a7e8-a948b30b1068","requestedAt":"2026-10-13T03:25:54.150778400Z","pedidoId":10,"cliente":"Elena Rojas","descripcion":"Pedido con disco lleno #FAIL-DOCUMENTO","total":19990.0,"tipoDocumento":"COMPROBANTE"}
+  x-death : cola origen=documentos.queue razon=rejected exchange=pedidos.tasks.exchange routing-keys=["documento.generar"]
+
+=================================================================
+8. ALERTA de DLQ via microservicio administrador
+=================================================================
+HTTP 200  [{"queue":"notificaciones.queue","queueMessages":0,"queueConsumers":1,"dlq":"notificaciones.dlq","dlqMessages":1,"alert":true,"state":"ALERTA"},{"queue":"tickets.queue","queueMessages":0,"queueConsumers":1,"dlq":"tickets.dlq","dlqMessages":1,"alert":true,"state":"ALERTA"},{"queue":"documentos.queue","queueMessages":0,"queueConsumers":1,"dlq":"documentos.dlq","dlqMessages":1,"alert":true,"state":"ALERTA"}]
+
+=================================================================
+9. ADMINISTRACION: crear / consultar / enlazar / eliminar
+=================================================================
+
+--- POST /api/queues (sin token) -> 401
+HTTP 401  {"timestamp":"2026-10-13T03:26:06.886922Z","status":401,"error":"Unauthorized","message":"Token JWT ausente, invalido o expirado","path":"/api/queues"}
+
+--- POST /api/queues con rol Cliente -> 403
+HTTP 403  {"timestamp":"2026-10-13T03:26:07.241394700Z","status":403,"error":"Forbidden","message":"Se requiere el rol Admin para modificar la configuracion de RabbitMQ","path":"/api/queues"}
+
+--- POST /api/queues nombre vacio -> 400
+HTTP 400  {"timestamp":"2026-10-13T03:26:07.501635600Z","status":400,"error":"Bad Request","message":"La peticion no es valida","path":"/api/queues","details":["name: debe tener 1-255 caracteres alfanumericos, punto, guion, guion bajo o dos puntos, empezar con letra o numero y no usar el prefijo reservado 'amq.'","name: name es obligatorio"]}
+
+--- POST /api/queues nombre con prefijo reservado amq. -> 400
+HTTP 400  {"timestamp":"2026-10-13T03:26:07.950802700Z","status":400,"error":"Bad Request","message":"La peticion no es valida","path":"/api/queues","details":["name: debe tener 1-255 caracteres alfanumericos, punto, guion, guion bajo o dos puntos, empezar con letra o numero y no usar el prefijo reservado 'amq.'"]}
+
+--- POST /api/queues TTL negativo -> 400
+HTTP 400  {"timestamp":"2026-10-13T03:26:08.256585800Z","status":400,"error":"Bad Request","message":"La peticion no es valida","path":"/api/queues","details":["messageTtlMs: messageTtlMs no puede ser negativo"]}
+
+--- POST /api/queues valida (con DLX + TTL) -> 201
+HTTP 201  {"name":"reportes.queue","messageCount":0,"consumerCount":0}
+
+--- POST /api/queues repetida -> 409
+HTTP 409  {"timestamp":"2026-10-13T03:26:08.859109500Z","status":409,"error":"Conflict","message":"La cola 'reportes.queue' ya existe","path":"/api/queues","details":[]}
+
+--- POST /api/exchanges (topic) -> 201
+HTTP 201  {"name":"reportes.topic","type":"TOPIC","durable":true,"autoDelete":false}
+
+--- POST /api/exchanges tipo inexistente -> 400
+HTTP 400  {"timestamp":"2026-10-13T03:26:09.594496400Z","status":400,"error":"Bad Request","message":"El cuerpo no es un JSON valido o contiene un valor no permitido (p. ej. un type desconocido)","path":"/api/exchanges","details":[]}
+
+--- POST /api/bindings -> 201
+HTTP 201  {"exchange":"reportes.topic","routingKey":"reporte.*","queue":"reportes.queue"}
+
+--- POST /api/bindings a una cola inexistente -> 404
+HTTP 404  {"timestamp":"2026-10-13T03:26:10.468872100Z","status":404,"error":"Not Found","message":"La cola 'no.existe' no existe","path":"/api/bindings","details":[]}
+
+--- GET /api/queues/reportes.queue -> 200
+HTTP 200  {"name":"reportes.queue","messageCount":0,"consumerCount":0}
+
+--- DELETE /api/bindings -> 204
+HTTP 204  
+
+--- DELETE /api/exchanges/reportes.topic -> 204
+HTTP 204  
+
+--- DELETE /api/queues/reportes.queue -> 204
+HTTP 204  
+
+--- DELETE /api/queues/reportes.queue otra vez -> 404
+HTTP 404  {"timestamp":"2026-10-13T03:26:13.202031900Z","status":404,"error":"Not Found","message":"La cola 'reportes.queue' no existe","path":"/api/queues/reportes.queue","details":[]}
+
+=================================================================
+10. CLUSTER: nodos activos
+=================================================================
+  rabbit@rabbit1     running=true mem_used=142MB
+  rabbit@rabbit2     running=true mem_used=142MB

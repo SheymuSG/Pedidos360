@@ -1,0 +1,80 @@
+# Cluster RabbitMQ de 2 nodos para Pedidos360 (EP4: "dos nodos RabbitMQ en cluster").
+#
+# Uso (desde esta carpeta):
+#   cp .env.example .env        # y reemplazar los valores
+#   docker compose up -d
+#   docker compose ps
+#   docker exec pedidos360-rabbit1 rabbitmqctl cluster_status
+#
+# Puertos publicados:
+#   rabbit1 -> AMQP 5672 | Management UI http://localhost:15672
+#   rabbit2 -> AMQP 5673 | Management UI http://localhost:15673
+#
+# Los nodos se unen solos: ambos montan rabbitmq.conf (peer discovery classic_config)
+# y comparten la misma cookie de Erlang, que es lo que autoriza la union al cluster.
+name: pedidos360-rabbitmq
+
+x-rabbit-common: &rabbit-common
+  image: rabbitmq:4.2-management
+  restart: unless-stopped
+  environment: &rabbit-env
+    RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:?defina RABBITMQ_ERLANG_COOKIE en .env}
+    RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:?defina RABBITMQ_USERNAME en .env}
+    RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?defina RABBITMQ_PASSWORD en .env}
+  # Chequeo TCP al puerto AMQP. No se usa "rabbitmq-diagnostics ping" porque cada ejecucion
+  # arranca una VM Erlang completa: en equipos con muchos nucleos supera los 10 s y deja el
+  # contenedor en "unhealthy" aunque el broker este bien.
+  healthcheck:
+    test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/5672'"]
+    interval: 10s
+    timeout: 5s
+    retries: 12
+    start_period: 30s
+
+services:
+  rabbit1:
+    <<: *rabbit-common
+    container_name: pedidos360-rabbit1
+    hostname: rabbit1
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/20-cluster.conf:ro
+      - rabbit1_data:/var/lib/rabbitmq
+
+  rabbit2:
+    <<: *rabbit-common
+    container_name: pedidos360-rabbit2
+    hostname: rabbit2
+    # Solo orden de arranque. NO usar "condition: service_healthy": en un cluster de 2 nodos,
+    # rabbit1 reiniciado espera a rabbit2 para tener mayoria y no queda sano hasta que rabbit2
+    # arranca; esperar su salud produce un bloqueo mutuo al recrear los contenedores.
+    depends_on:
+      - rabbit1
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/20-cluster.conf:ro
+      - rabbit2_data:/var/lib/rabbitmq
+
+  # Base de datos solo para desarrollo local: docker compose --profile local-db up -d
+  # En AWS se usa RDS, por eso no se levanta por defecto.
+  mysql:
+    image: mysql:8.0
+    profiles: ["local-db"]
+    container_name: pedidos360-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?defina MYSQL_ROOT_PASSWORD en .env}
+      MYSQL_DATABASE: pedidos360_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  rabbit1_data:
+  rabbit2_data:
+  mysql_data:

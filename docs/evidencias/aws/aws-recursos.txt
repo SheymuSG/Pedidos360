@@ -1,0 +1,115 @@
+### Inventario de recursos AWS - Pedidos360 (cuenta 774860322169, us-east-1)
+### Generado: 2026-10-13T15:16:54Z
+
+## EC2
+{
+    "id": "i-0c473e6735ee06576",
+    "estado": "running",
+    "tipo": "t3.medium",
+    "ip_publica": "54.196.164.183",
+    "perfil": "arn:aws:iam::774860322169:instance-profile/LabInstanceProfile",
+    "ami": "ami-097855b862d5b1eb2",
+    "volumen_gb": "vol-088ebdf2c2aa736e0"
+}
+
+## Security group de la EC2 (reglas de entrada)
+[
+    {
+        "puerto": 8080,
+        "hasta": 8080,
+        "origen": [
+            "0.0.0.0/0"
+        ]
+    },
+    {
+        "puerto": 22,
+        "hasta": 22,
+        "origen": [
+            "200.28.55.251/32"
+        ]
+    },
+    {
+        "puerto": 15672,
+        "hasta": 15673,
+        "origen": [
+            "200.28.55.251/32"
+        ]
+    }
+]
+
+## RDS
+{
+    "id": "pedidos360-db",
+    "estado": "available",
+    "motor": "mysql",
+    "version": "8.0.46",
+    "clase": "db.t3.micro",
+    "endpoint": "pedidos360-db.caofdtnxsn97.us-east-1.rds.amazonaws.com",
+    "publico": false,
+    "almacenamiento_gb": 20
+}
+
+## Security group de RDS (entrada)
+[
+    {
+        "puerto": 3306,
+        "origen_sg": [
+            "sg-043c0ffc56a61670e"
+        ]
+    }
+]
+
+## API Gateway HTTP API
+{
+    "id": "vr9sstfceh",
+    "nombre": "pedidos360-api",
+    "endpoint": "https://vr9sstfceh.execute-api.us-east-1.amazonaws.com",
+    "cors": {
+        "AllowHeaders": [
+            "authorization",
+            "content-type"
+        ],
+        "AllowMethods": [
+            "GET",
+            "POST",
+            "DELETE",
+            "OPTIONS"
+        ],
+        "AllowOrigins": [
+            "http://localhost:4200"
+        ],
+        "MaxAge": 3600
+    }
+}
+-- Autorizador JWT
+[
+    {
+        "nombre": "entra-jwt",
+        "tipo": "JWT",
+        "origen_token": [
+            "$request.header.Authorization"
+        ],
+        "jwt": {
+            "Audience": [
+                "49673b38-d477-4cb1-b6c3-01806c189fe0",
+                "api://49673b38-d477-4cb1-b6c3-01806c189fe0"
+            ],
+            "Issuer": "https://login.microsoftonline.com/404d6b8a-6f61-411a-98f7-3ae685d26aaa/v2.0"
+        }
+    }
+]
+-- Rutas
+------------------------------------------------
+|                   GetRoutes                  |
++---------------+------------------------------+
+| autorizacion  |            ruta              |
++---------------+------------------------------+
+|  JWT          |  ANY /api/exchanges/{name}   |
+|  JWT          |  ANY /api/pedidos            |
+|  JWT          |  ANY /api/queues             |
+|  JWT          |  ANY /api/bindings           |
+|  JWT          |  ANY /api/exchanges          |
+|  JWT          |  ANY /api/prueba             |
+|  JWT          |  ANY /api/queues/{name}      |
+|  JWT          |  GET /api/monitoring/queues  |
++---------------+------------------------------+

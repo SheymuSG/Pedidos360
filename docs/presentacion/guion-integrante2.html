@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guion Parte 1 – Integrante 2</title>
+<style>
+  @page { size: A4; margin: 16mm 16mm 18mm; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; color: #1f2328; font-size: 12.5pt; line-height: 1.45; margin: 0; }
+  h1 { font-size: 20pt; margin: 0 0 4px; }
+  .sub { color: #57606a; margin: 0 0 14px; }
+  h2 { font-size: 14pt; margin: 22px 0 8px; border-bottom: 1px solid #d0d7de; padding-bottom: 4px; }
+  table.datos { border-collapse: collapse; width: 100%; margin: 6px 0 4px; }
+  table.datos td { border: 1px solid #d0d7de; padding: 6px 10px; vertical-align: top; }
+  table.datos td:first-child { width: 30%; font-weight: 600; background: #f6f8fa; }
+  .bloque { border: 1px solid #d0d7de; border-radius: 8px; padding: 10px 14px; margin: 10px 0; break-inside: avoid; }
+  .bloque h3 { margin: 0 0 4px; font-size: 12.5pt; }
+  .tiempo { color: #57606a; font-weight: 400; }
+  .muestra { color: #57606a; font-size: 11pt; margin: 0 0 6px; }
+  .di { background: #f6f8fa; border-left: 4px solid #0969da; padding: 8px 12px; margin: 0; }
+  code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 11pt; background: #eff1f3; padding: 0 3px; border-radius: 3px; }
+  ul.check { list-style: none; padding-left: 0; }
+  ul.check li::before { content: "\2610  "; }
+  .diagrama { break-before: page; text-align: center; }
+  .diagrama img { width: 100%; max-height: 245mm; object-fit: contain; }
+  .nota { color: #57606a; font-size: 11pt; }
+</style>
+</head>
+<body>
+
+<h1>Parte 1 – Arquitectura y seguridad</h1>
+<p class="sub">Video Pedidos360 · Evaluación 2 (DSY1107) · Integrante 2 · abre el video</p>
+
+<table class="datos">
+  <tr><td>Duración</td><td>2:00 – 2:30 minutos</td></tr>
+  <tr><td>Qué se ve en pantalla</td><td>El diagrama de la última página de este PDF, a pantalla completa. Señala con el mouse cada caja cuando la nombres.</td></tr>
+  <tr><td>Cómo grabar</td><td>Win + Alt + R (grabador de Windows), OBS, o una reunión de Teams/Zoom grabada compartiendo pantalla. 1080p, con voz, sin música.</td></tr>
+  <tr><td>Entrega</td><td>Archivo <code>parte1-integrante2.mp4</code> enviado a Sebastián.</td></tr>
+</table>
+<p class="nota">No necesitas AWS, Azure ni el código. Si te equivocas, pausa dos segundos y repite desde el inicio de ese bloque: Sebastián corta el error al unir.</p>
+
+<h2>Guion</h2>
+
+<div class="bloque">
+  <h3>1. Presentación <span class="tiempo">· 15 s</span></h3>
+  <p class="muestra">Muestra: el diagrama completo.</p>
+  <p class="di">"Hola, somos el equipo de Pedidos360. Les vamos a mostrar cómo incorporamos mensajería asíncrona con RabbitMQ al sistema que construimos en la evaluación anterior. Yo explico la arquitectura, Sebastián muestra la demo en la nube y [nombre del Integrante 3] explica el código."</p>
+</div>
+
+<div class="bloque">
+  <h3>2. Punto de partida <span class="tiempo">· 20 s</span></h3>
+  <p class="muestra">Señala: Microsoft Entra ID, Frontend Angular y API Gateway (fila de arriba) y Amazon RDS.</p>
+  <p class="di">"Pedidos360 ya tenía un frontend en Angular con inicio de sesión en Microsoft Entra ID, un backend en Spring Boot con base de datos MySQL en Amazon RDS, y un API Gateway en AWS como API Manager. Ahora, al crear un pedido, hay tareas que no deben hacer esperar al usuario: avisar al cliente, generar un ticket y generar el comprobante."</p>
+</div>
+
+<div class="bloque">
+  <h3>3. Flujo de un pedido <span class="tiempo">· 45 s</span></h3>
+  <p class="muestra">Señala: backend → pedidos.events.exchange → notificaciones.queue y tickets.queue; luego pedidos.tasks.exchange → documentos.queue; al final procesador-service.</p>
+  <p class="di">"El usuario crea el pedido en Angular. El API Gateway valida el token y lo envía al backend, que guarda el pedido en RDS y publica dos mensajes en RabbitMQ. El primero es el evento <code>pedido.creado</code>, que va a un exchange de tipo <b>topic</b>: la cola de notificaciones está enlazada con el patrón <code>pedido.*</code>, así que recibe cualquier evento de pedido, y la cola de tickets solo con <code>pedido.creado</code>. El segundo es el comando <code>documento.generar</code>, que va a un exchange de tipo <b>direct</b> y llega solo a la cola de documentos, por coincidencia exacta. Un tercer microservicio, el procesador, consume las tres colas."</p>
+</div>
+
+<div class="bloque">
+  <h3>4. Qué pasa cuando algo falla <span class="tiempo">· 30 s</span></h3>
+  <p class="muestra">Señala: procesador-service → pedidos.dlx → las tres DLQ (las cajas en color).</p>
+  <p class="di">"Si el procesamiento falla por algo transitorio, el procesador reintenta tres veces con espera creciente de 1 y 2 segundos. Si sigue fallando, o si el error es permanente como un dato inválido, rechaza el mensaje y RabbitMQ lo reenvía al Dead Letter Exchange, que lo deja en la DLQ de esa cola. Cada DLQ guarda los mensajes hasta 24 horas y máximo 10.000. Y si RabbitMQ estuviera caído, el pedido igual se guarda: la mensajería no rompe la lógica existente."</p>
+</div>
+
+<div class="bloque">
+  <h3>5. Administración e infraestructura <span class="tiempo">· 20 s</span></h3>
+  <p class="muestra">Señala: rabbit-admin-service, el recuadro "Clúster RabbitMQ (2 nodos)" y el recuadro de la EC2.</p>
+  <p class="di">"Agregamos un microservicio administrador con una API REST para crear y eliminar colas, exchanges y bindings, y para monitorear las DLQ. RabbitMQ corre como un clúster de dos nodos levantado con docker compose en una instancia EC2."</p>
+</div>
+
+<div class="bloque">
+  <h3>6. Seguridad <span class="tiempo">· 20 s</span></h3>
+  <p class="muestra">Señala: Microsoft Entra ID y API Gateway.</p>
+  <p class="di">"El token JWT de Entra ID se valida en dos capas: primero en el API Gateway, con un autorizador JWT que revisa el emisor y la audiencia; después en cada microservicio, que revisa firma, emisor, audiencia, vigencia y roles. Crear pedidos exige el rol Cliente y modificar RabbitMQ exige el rol Admin."</p>
+</div>
+
+<div class="bloque">
+  <h3>7. Cierre y traspaso <span class="tiempo">· 5 s</span></h3>
+  <p class="di">"Ahora Sebastián les muestra todo funcionando en la nube."</p>
+</div>
+
+<h2>Antes de enviar</h2>
+<ul class="check">
+  <li>Dura entre 2:00 y 2:30.</li>
+  <li>La voz se entiende de principio a fin, sin ruido de fondo.</li>
+  <li>El diagrama se lee bien en el video (zoom 125 % si hace falta).</li>
+  <li>No aparecen chats, correos ni otras pestañas.</li>
+  <li>Termina con la frase de traspaso a Sebastián.</li>
+  <li>El archivo se llama <code>parte1-integrante2.mp4</code> y ya se lo enviaste a Sebastián.</li>
+</ul>
+
+<h2>Si el docente te pregunta</h2>
+<table class="datos">
+  <tr><td>¿Exchange, cola y binding?</td><td>El exchange recibe los mensajes y decide a qué colas van; la cola los guarda hasta que un consumidor los procesa; el binding es la regla que une un exchange con una cola.</td></tr>
+  <tr><td>¿Por qué topic y direct?</td><td>Topic para eventos que varias colas escuchan por patrón (<code>pedido.*</code>); direct para comandos con un solo destinatario por coincidencia exacta (<code>documento.generar</code>).</td></tr>
+  <tr><td>¿Diferencia entre DLX y DLQ?</td><td>El DLX es un exchange que enruta los mensajes rechazados; la DLQ es la cola donde quedan guardados para revisarlos (24 h, máximo 10.000).</td></tr>
+  <tr><td>¿Dónde se valida el JWT?</td><td>En el autorizador JWT del API Gateway (emisor y audiencia) y en cada microservicio con Spring Security (firma, emisor, audiencia, vigencia y roles).</td></tr>
+  <tr><td>¿Y si RabbitMQ se cae?</td><td>El pedido se guarda igual en la base de datos; el error queda en el log y no afecta la respuesta al usuario.</td></tr>
+  <tr><td>¿Las colas están replicadas?</td><td>No: son colas clásicas en un nodo. Para alta disponibilidad real usaríamos quorum queues con 3 nodos.</td></tr>
+</table>
+
+<div class="diagrama">
+  <img src="arquitectura.png" alt="Diagrama de arquitectura de Pedidos360">
+</div>
+
+</body>
+</html>

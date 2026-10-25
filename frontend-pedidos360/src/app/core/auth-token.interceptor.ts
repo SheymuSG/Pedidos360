@@ -24,12 +24,14 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
   return from(
     msal.acquireTokenSilent({ scopes: [environment.msal.scope], account: cuenta })
   ).pipe(
-    switchMap((resultado) =>
-      next(req.clone({ setHeaders: { Authorization: `Bearer ${resultado.accessToken}` } }))
-    ),
+    // Solo captura fallos de la ADQUISICION del token: los errores HTTP de la respuesta (401, 403...)
+    // pasan tal cual y no deben registrarse como "no se pudo adquirir el token".
     catchError((err) => {
       console.error('authTokenInterceptor: no se pudo adquirir el token para', req.url, err);
       return throwError(() => err);
-    })
+    }),
+    switchMap((resultado) =>
+      next(req.clone({ setHeaders: { Authorization: `Bearer ${resultado.accessToken}` } }))
+    )
   );
 };

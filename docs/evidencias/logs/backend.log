@@ -1,0 +1,78 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-13T00:19:05.357-03:00  INFO 14716 --- [backend] [           main] c.pedidos360.backend.BackendApplication  : Starting BackendApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 14716 (C:\Users\sebas\OneDrive\Escritorio\Pedidos360-corregido\backend\target\backend-0.0.1-SNAPSHOT.jar started by sebas in C:\Users\sebas\OneDrive\Escritorio\Pedidos360-corregido)
+2026-10-13T00:19:05.380-03:00  INFO 14716 --- [backend] [           main] c.pedidos360.backend.BackendApplication  : The following 1 profile is active: "local"
+2026-10-13T00:19:15.787-03:00  INFO 14716 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-13T00:19:16.474-03:00  INFO 14716 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 497 ms. Found 1 JPA repository interface.
+2026-10-13T00:19:23.774-03:00  INFO 14716 --- [backend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-13T00:19:23.878-03:00  INFO 14716 --- [backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-13T00:19:23.882-03:00  INFO 14716 --- [backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-13T00:19:24.152-03:00  INFO 14716 --- [backend] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 18136 ms
+2026-10-13T00:19:27.027-03:00  INFO 14716 --- [backend] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-13T00:19:28.191-03:00  INFO 14716 --- [backend] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-13T00:19:32.566-03:00  INFO 14716 --- [backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-13T00:19:32.952-03:00  INFO 14716 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-13T00:19:37.409-03:00  INFO 14716 --- [backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@30a791a6
+2026-10-13T00:19:37.416-03:00  INFO 14716 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-13T00:19:38.038-03:00  INFO 14716 --- [backend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/pedidos360_db?createDatabaseIfNotExist=true]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.46
+	Default catalog/schema: pedidos360_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-13T00:19:48.711-03:00  INFO 14716 --- [backend] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: create table pedidos (id bigint not null auto_increment, cliente varchar(255), descripcion varchar(255), fecha_creacion datetime(6), total float(53), primary key (id)) engine=InnoDB
+2026-10-13T00:19:50.654-03:00  INFO 14716 --- [backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-13T00:19:51.498-03:00  INFO 14716 --- [backend] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-13T00:19:54.488-03:00  WARN 14716 --- [backend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-13T00:19:58.942-03:00  INFO 14716 --- [backend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-13T00:19:58.985-03:00  INFO 14716 --- [backend] [           main] c.pedidos360.backend.BackendApplication  : Started BackendApplication in 58.184 seconds (process running for 64.193)
+2026-10-13T00:20:54.977-03:00  INFO 14716 --- [backend] [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-13T00:20:54.978-03:00  INFO 14716 --- [backend] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-13T00:20:54.985-03:00  INFO 14716 --- [backend] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:20:59.109-03:00  INFO 14716 --- [backend] [nio-8080-exec-5] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672, localhost:5673]
+2026-10-13T00:20:59.530-03:00  INFO 14716 --- [backend] [nio-8080-exec-5] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#1dc987b:0/SimpleConnection@71dfd3ee [delegate=amqp://pedidos360@127.0.0.1:5672/, localPort=57231]
+2026-10-13T00:20:59.731-03:00  INFO 14716 --- [backend] [nio-8080-exec-5] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=d50bdac7-59aa-4b40-95b3-b140bc178ab0
+2026-10-13T00:20:59.799-03:00  INFO 14716 --- [backend] [nio-8080-exec-5] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=cf00d657-0bb9-48bf-b02c-96479bab5087
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:21:04.587-03:00  INFO 14716 --- [backend] [nio-8080-exec-9] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=c039822f-6de5-4003-9b0e-58b4ee8fb321
+2026-10-13T00:21:04.590-03:00  INFO 14716 --- [backend] [nio-8080-exec-9] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=340ece01-ce27-4d06-863d-7b90710c9b47
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:21:13.201-03:00  INFO 14716 --- [backend] [nio-8080-exec-6] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=d2cd86ea-4bb4-4c81-972c-bfbef88391a7
+2026-10-13T00:21:13.204-03:00  INFO 14716 --- [backend] [nio-8080-exec-6] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=e1bd9130-ab83-47e8-8d36-8487c95641b2
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:21:24.271-03:00  INFO 14716 --- [backend] [io-8080-exec-10] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=e80b1470-5674-46d6-9803-e8fc52cd92c6
+2026-10-13T00:21:24.273-03:00  INFO 14716 --- [backend] [io-8080-exec-10] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=b2e5d945-098e-4a0e-b588-e9b2f9b6d98b
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:21:30.080-03:00  INFO 14716 --- [backend] [nio-8080-exec-1] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=125da74b-a729-4aaf-87aa-83837f787267
+2026-10-13T00:21:30.083-03:00  INFO 14716 --- [backend] [nio-8080-exec-1] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=709829f0-6cf6-41b9-8a5e-eaad611d8296
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:25:22.379-03:00  INFO 14716 --- [backend] [nio-8080-exec-6] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=c0a79925-016c-4adb-ab3b-2ad9a3c2a7f2
+2026-10-13T00:25:22.383-03:00  INFO 14716 --- [backend] [nio-8080-exec-6] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=74e706ef-4eb0-4328-a1e1-9d9a7459e886
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:25:27.801-03:00  INFO 14716 --- [backend] [io-8080-exec-10] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=8190b0ba-1c35-447e-9363-6edd1d1ded31
+2026-10-13T00:25:27.804-03:00  INFO 14716 --- [backend] [io-8080-exec-10] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=5e1f99a7-9e89-4164-98df-de759ac13e2a
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:25:36.618-03:00  INFO 14716 --- [backend] [nio-8080-exec-1] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=5a4666e3-8a4b-445f-9622-e4b2df26d3d9
+2026-10-13T00:25:36.620-03:00  INFO 14716 --- [backend] [nio-8080-exec-1] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=76d7e7dc-7806-4444-8f62-7dc78a469fd9
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:25:47.949-03:00  INFO 14716 --- [backend] [nio-8080-exec-5] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=4f778bcb-22bf-49e8-afcd-f2e060ec38ff
+2026-10-13T00:25:47.951-03:00  INFO 14716 --- [backend] [nio-8080-exec-5] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=a3f74010-405a-463b-8fdf-f392ca5c48e5
+Hibernate: insert into pedidos (cliente,descripcion,fecha_creacion,total) values (?,?,?,?)
+2026-10-13T00:25:54.149-03:00  INFO 14716 --- [backend] [nio-8080-exec-9] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.events.exchange routingKey=pedido.creado msgId=60bb56fd-f00c-4f29-8832-dddf8441f6f1
+2026-10-13T00:25:54.152-03:00  INFO 14716 --- [backend] [nio-8080-exec-9] c.p.b.messaging.PedidoEventPublisher     : [PUBLISH] exchange=pedidos.tasks.exchange routingKey=documento.generar msgId=94a893ce-9cd4-447c-a7e8-a948b30b1068

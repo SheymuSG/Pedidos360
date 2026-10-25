@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: rabbit-admin-service
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Mismo tenant de Entra ID que el backend de pedidos.
+          issuer-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID:404d6b8a-6f61-411a-98f7-3ae685d26aaa}/v2.0
+
+  # ==========================================
+  # RABBITMQ (cluster de 2 nodos: ambos como direcciones de failover)
+  # ==========================================
+  rabbitmq:
+    addresses: ${RABBITMQ_ADDRESSES:localhost:5672,localhost:5673}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VHOST:/}
+
+server:
+  port: 8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+pedidos360:
+  security:
+    audience: ${AZURE_API_AUDIENCE:api://49673b38-d477-4cb1-b6c3-01806c189fe0}
+    allowed-origins: ${PEDIDOS360_ALLOWED_ORIGINS:http://localhost:4200}
+    # SOLO perfil "local": secreto HS256 para tokens de prueba. Sin valor por defecto a proposito.
+    local-jwt-secret: ${LOCAL_JWT_SECRET}
+
+  admin:
+    # Colas que muestra GET /api/monitoring/queues (nombres alineados con procesador-service).
+    monitoring:
+      alert-threshold: 1          # con >= 1 mensaje en una DLQ se levanta la alerta
+      queues:
+        - name: notificaciones.queue
+          dlq: notificaciones.dlq
+        - name: tickets.queue
+          dlq: tickets.dlq
+        - name: documentos.queue
+          dlq: documentos.dlq

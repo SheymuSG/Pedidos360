@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { Pedido } from '../../core/pedido.model';
 import { PedidoService } from '../../core/pedido.service';
@@ -8,7 +9,7 @@ import { PedidoService } from '../../core/pedido.service';
 @Component({
   selector: 'app-pedidos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './pedidos.page.html',
   styleUrl: './pedidos.page.css',
 })

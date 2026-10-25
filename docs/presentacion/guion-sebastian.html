@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guion Parte 2 – Sebastián</title>
+<style>
+  @page { size: A4; margin: 15mm 15mm 16mm; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; color: #1f2328; font-size: 12pt; line-height: 1.42; margin: 0; }
+  h1 { font-size: 20pt; margin: 0 0 4px; }
+  .sub { color: #57606a; margin: 0 0 12px; }
+  h2 { font-size: 14pt; margin: 18px 0 8px; border-bottom: 2px solid #0969da; padding-bottom: 3px; }
+  table { border-collapse: collapse; width: 100%; margin: 6px 0 8px; }
+  td, th { border: 1px solid #d0d7de; padding: 6px 9px; vertical-align: top; text-align: left; }
+  th { background: #f6f8fa; }
+  table.datos td:first-child { width: 27%; font-weight: 600; background: #f6f8fa; }
+  .bloque { border: 1px solid #d0d7de; border-radius: 8px; padding: 8px 12px; margin: 8px 0; break-inside: avoid; }
+  .bloque h3 { margin: 0 0 3px; font-size: 12pt; }
+  .tiempo { color: #57606a; font-weight: 400; }
+  .req { display: inline-block; background: #ddf4ff; color: #0550ae; border-radius: 10px; padding: 0 7px; font-size: 9.5pt; font-weight: 600; margin-left: 4px; }
+  .muestra { color: #57606a; font-size: 10.5pt; margin: 0 0 5px; }
+  .di { background: #f6f8fa; border-left: 4px solid #0969da; padding: 6px 10px; margin: 5px 0 0; }
+  code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 10.5pt; background: #eff1f3; padding: 0 3px; border-radius: 3px; }
+  pre { font-family: Consolas, "Cascadia Mono", monospace; font-size: 10pt; background: #0d1117; color: #e6edf3; padding: 8px 11px; border-radius: 6px; margin: 4px 0 0; white-space: pre-wrap; }
+  .c { color: #8b949e; }
+  ul.check { list-style: none; padding-left: 0; margin: 4px 0; }
+  ul.check li { margin: 3px 0; }
+  ul.check li::before { content: "\2610  "; }
+  .aviso { background: #fff8c5; border: 1px solid #d4a72c; border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
+</style>
+</head>
+<body>
+
+<h1>Parte 2 – Demo en vivo en AWS</h1>
+<p class="sub">Video Pedidos360 · Evaluación 2 (DSY1107) · Sebastián · va entre la Parte 1 y la Parte 3</p>
+
+<div class="aviso"><b>Tu parte debe durar como máximo 3:00.</b> Las partes de tus compañeros ya suman 6:59 (Parte 1: 2:29 · Parte 3: 4:30) y la pauta permite hasta 10 minutos. Apunta a 2:45: di cada idea en una frase y no esperes en silencio a que carguen las páginas (déjalas abiertas antes).</div>
+
+<h2>Antes de grabar</h2>
+<table class="datos">
+  <tr><td>Frontend</td><td>https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com</td></tr>
+  <tr><td>Consola RabbitMQ</td><td>http://100.30.255.138:15672 · usuario y clave en <code>infra/aws/.env.cloud</code> (solo abre desde tu IP)</td></tr>
+  <tr><td>Decodificar el token</td><td>https://jwt.ms</td></tr>
+</table>
+<ul class="check">
+  <li><b>Entra ID:</b> Pedidos360-Web → Authentication → "+ Agregar URI de redireccionamiento" → Aplicación de página única → <code>https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com</code> (sin barra final). La URL anterior ya no existe.</li>
+  <li>Inicia sesión una vez en el frontend y crea un pedido de prueba. Si da 403, asigna el rol Cliente en Enterprise applications → Pedidos360-API → Users and groups.</li>
+  <li>Deja estas pestañas abiertas, en este orden: Entra ID (Información general) · EC2 · RDS · API Gateway <code>pedidos360-api</code> → Routes · frontend (con sesión iniciada) · jwt.ms · consola RabbitMQ (con sesión iniciada).</li>
+  <li>Abre la terminal de la nube: EC2 → <code>pedidos360-ec2</code> → Conectar → Session Manager → Conectar.</li>
+  <li>Abre PowerShell con este comando ya escrito (sin Enter): <code>curl.exe -i https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com/api/pedidos</code></li>
+  <li>Las DLQ están en 0. Si haces pruebas antes y quedan mensajes: consola RabbitMQ → cada <code>*.dlq</code> → Purge Messages.</li>
+  <li>Graba antes de las 17:52 hora de Chile (13:52 hora del lab, fin de la sesión). Si el lab se reinicia, la IP y el gateway cambian.</li>
+</ul>
+
+<h2>Tomas (2:50 en total)</h2>
+
+<div class="bloque"><h3>1. Entra ID <span class="tiempo">· 15 s</span><span class="req">req. 5</span></h3>
+  <p class="muestra">Información general (Id. de inquilino) → Usuarios (2) → Registros de aplicaciones (Pedidos360-API y Pedidos360-Web).</p>
+  <p class="di">"Este es nuestro tenant de Microsoft Entra ID, con dos usuarios y las aplicaciones del frontend y de la API, que define los roles Cliente y Admin."</p></div>
+
+<div class="bloque"><h3>2. Infraestructura en AWS <span class="tiempo">· 25 s</span><span class="req">req. 1, 2 y 7</span></h3>
+  <p class="muestra">EC2 <code>pedidos360-ec2</code> en ejecución → RDS <code>pedidos360-db</code> disponible → API Gateway <code>pedidos360-api</code> → Routes (las rutas <code>/api/...</code> con JWT) → Authorization (autorizador <code>entra-jwt</code>).</p>
+  <p class="di">"En AWS tenemos la EC2 con RabbitMQ y los tres microservicios, la base de datos en RDS y el API Gateway como API Manager: cada ruta tiene un autorizador JWT con el emisor y la audiencia de Entra ID."</p></div>
+
+<div class="bloque"><h3>3. Login y JWT <span class="tiempo">· 25 s</span><span class="req">req. 6</span></h3>
+  <p class="muestra">Frontend → Iniciar sesión (o muestra que ya estás dentro) → F12 → Network → petición <code>pedidos</code> → copia el header <code>Authorization</code> sin "Bearer" → pégalo en jwt.ms.</p>
+  <p class="di">"El frontend inicia sesión con OpenID Connect y PKCE. Entra ID entrega este JWT: emisor nuestro tenant, audiencia la API y el rol Cliente."</p></div>
+
+<div class="bloque"><h3>4. Pedido a través del API Manager <span class="tiempo">· 15 s</span><span class="req">req. 3 y 4</span></h3>
+  <p class="muestra">Crea un pedido (Ana · Café 1 kg · 15990) → aparece en la tabla; en Network el POST va a <code>6iqkstpi9c.execute-api...</code> con 200.</p>
+  <p class="di">"El frontend llama al backend a través del API Gateway; con token válido la petición pasa y el pedido se guarda."</p></div>
+
+<div class="bloque"><h3>5. Rechazo sin token <span class="tiempo">· 10 s</span><span class="req">req. 4</span></h3>
+  <p class="muestra">En PowerShell, Enter al comando ya escrito → <code>HTTP/1.1 401 Unauthorized</code>.</p>
+  <p class="di">"Sin un token válido, el API Gateway responde 401 y la petición no llega al backend."</p></div>
+
+<div class="bloque"><h3>6. docker compose en la nube <span class="tiempo">· 15 s</span><span class="req">req. 11</span></h3>
+  <p class="muestra">En Session Manager:</p>
+<pre>cd /opt/pedidos360 &amp;&amp; sudo docker compose ps</pre>
+  <p class="di">"Todo corre con docker compose en la EC2: los dos nodos de RabbitMQ y los tres microservicios."</p></div>
+
+<div class="bloque"><h3>7. RabbitMQ: clúster, exchanges y colas <span class="tiempo">· 30 s</span><span class="req">req. 8, 10 y 9</span></h3>
+  <p class="muestra">Overview → tabla Nodes (<code>rabbit@rabbit1</code> y <code>rabbit@rabbit2</code>) → Exchanges (<code>pedidos.events.exchange</code> topic, <code>pedidos.tasks.exchange</code> direct, <code>pedidos.dlx</code>) → Queues (3 colas + 3 DLQ, todas en 0).</p>
+  <p class="di">"RabbitMQ corre en un clúster de dos nodos. Tenemos un exchange topic para eventos, uno direct para comandos y el DLX. Cada una de las tres colas tiene su DLQ, con retención de 24 horas."</p></div>
+
+<div class="bloque"><h3>8. Una DLQ funcionando en vivo <span class="tiempo">· 30 s</span><span class="req">req. 9</span></h3>
+  <p class="muestra">En el frontend crea un pedido con descripción <code>Prueba #FAIL-TICKET</code> → en Session Manager:</p>
+<pre>sudo docker logs --tail 6 pedidos360-procesador
+<span class="c">→ intento 1/3 ... intento 2/3 ... NACK -&gt; DLQ</span></pre>
+  <p class="muestra">→ en RabbitMQ, Queues: <code>tickets.dlq</code> con 1 mensaje.</p>
+  <p class="di">"Este pedido simula que el servicio de tickets está caído: el procesador reintenta tres veces y lo rechaza, y el mensaje queda en la DLQ de tickets. La notificación y el documento del mismo pedido sí se procesaron."</p></div>
+
+<div class="bloque"><h3>9. Traspaso <span class="tiempo">· 5 s</span></h3>
+  <p class="di">"Ahora [nombre del Integrante 3] explica cómo está hecho esto en el código."</p></div>
+
+<h2>Orden final del video</h2>
+<table>
+  <tr><th>Orden</th><th>Parte</th><th>Archivo</th><th>Duración</th></tr>
+  <tr><td>1</td><td>Parte 1 – Integrante 2 (arquitectura)</td><td>WhatsApp Video 2026-10-23 at 11.20.04 PM.mp4</td><td>2:29</td></tr>
+  <tr><td>2</td><td>Parte 2 – Sebastián (demo en AWS)</td><td>tu grabación</td><td>≤ 3:00</td></tr>
+  <tr><td>3</td><td>Parte 3 – Integrante 3 (código)</td><td>WhatsApp Video 2026-10-23 at 11.04.13 PM.mp4</td><td>4:30</td></tr>
+</table>
+<p>Únelos en Clipchamp en ese orden y exporta en 1080p. Revisa que el total no pase de 10:00.</p>
+
+</body>
+</html>

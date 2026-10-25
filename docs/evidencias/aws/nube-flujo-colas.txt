@@ -1,0 +1,39 @@
+
+=================================================================
+Estado inicial
+=================================================================
+COLA                      MENSAJES  CONSUMIDORES  NODO
+documentos.dlq            0         0             rabbit@rabbit1
+documentos.queue          0         1             rabbit@rabbit1
+notificaciones.dlq        0         0             rabbit@rabbit1
+notificaciones.queue      0         1             rabbit@rabbit1
+tickets.dlq               0         0             rabbit@rabbit1
+tickets.queue             0         1             rabbit@rabbit1
+
+=================================================================
+Publicacion (equivalente a lo que hace el backend al crear pedidos)
+=================================================================
+Pedido normal -> evento (topic) + comando (direct):
+  pedidos.events.exchange    rk=pedido.creado      -> {"routed":true}
+  pedidos.tasks.exchange     rk=documento.generar  -> {"routed":true}
+Pedido con #FAIL-TICKET (recuperable que no se resuelve -> 3 intentos -> DLQ):
+  pedidos.events.exchange    rk=pedido.creado      -> {"routed":true}
+Pedido con #INVALID-NOTIFICACION (permanente -> DLQ inmediata):
+  pedidos.events.exchange    rk=pedido.creado      -> {"routed":true}
+Comando con #FAIL-DOCUMENTO (cola direct -> 3 intentos -> DLQ):
+  pedidos.tasks.exchange     rk=documento.generar  -> {"routed":true}
+Routing key pedido.desconocido: coincide con el patron topic pedido.* -> solo llega a notificaciones.queue:
+  pedidos.events.exchange    rk=pedido.desconocido -> {"routed":true}
+
+Esperando 15 s (reintentos con backoff 1 s + 2 s)...
+
+=================================================================
+Estado final (mensajes en cada DLQ)
+=================================================================
+COLA                      MENSAJES  CONSUMIDORES  NODO
+documentos.dlq            1         0             rabbit@rabbit1
+documentos.queue          0         1             rabbit@rabbit1
+notificaciones.dlq        1         0             rabbit@rabbit1
+notificaciones.queue      0         1             rabbit@rabbit1
+tickets.dlq               1         0             rabbit@rabbit1
+tickets.queue             0         1             rabbit@rabbit1

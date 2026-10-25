@@ -1,7 +1,10 @@
 export const environment = {
   production: false,
   // El backend ya no corre en local: apunta directo al API Gateway desplegado en AWS.
-  apiBaseUrl: 'https://ti8qy9uqt9.execute-api.us-east-1.amazonaws.com',
+  apiBaseUrl: 'https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com',
+  // Microservicio administrador de RabbitMQ (rabbit-admin-service). En desarrollo se llama
+  // directo al puerto local; en produccion debe salir por el API Gateway (ver environment.prod.ts).
+  adminApiBaseUrl: 'http://localhost:8082',
   msal: {
     clientId: 'dae98be9-c519-4d2e-870b-6b9899734902',
     authority: 'https://login.microsoftonline.com/404d6b8a-6f61-411a-98f7-3ae685d26aaa',

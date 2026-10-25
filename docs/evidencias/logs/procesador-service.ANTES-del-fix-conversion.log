@@ -1,0 +1,117 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-13T00:19:04.513-03:00  INFO 22660 --- [procesador-service] [           main] c.p.procesador.ProcesadorApplication     : Starting ProcesadorApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 22660 (C:\Users\sebas\OneDrive\Escritorio\Pedidos360-corregido\procesador-service\target\procesador-service-0.0.1-SNAPSHOT.jar started by sebas in C:\Users\sebas\OneDrive\Escritorio\Pedidos360-corregido)
+2026-10-13T00:19:04.602-03:00  INFO 22660 --- [procesador-service] [           main] c.p.procesador.ProcesadorApplication     : The following 1 profile is active: "local"
+2026-10-13T00:19:20.586-03:00  INFO 22660 --- [procesador-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8081 (http)
+2026-10-13T00:19:20.950-03:00  INFO 22660 --- [procesador-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-13T00:19:20.951-03:00  INFO 22660 --- [procesador-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-13T00:19:21.560-03:00  INFO 22660 --- [procesador-service] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 15949 ms
+2026-10-13T00:19:32.441-03:00  INFO 22660 --- [procesador-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-10-13T00:19:33.325-03:00  INFO 22660 --- [procesador-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
+2026-10-13T00:19:33.370-03:00  INFO 22660 --- [procesador-service] [           main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672, localhost:5673]
+2026-10-13T00:19:34.594-03:00  INFO 22660 --- [procesador-service] [           main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#700b9e6b:0/SimpleConnection@15d65fcf [delegate=amqp://pedidos360@127.0.0.1:5672/, localPort=57103]
+2026-10-13T00:19:38.042-03:00  INFO 22660 --- [procesador-service] [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-13T00:19:38.043-03:00  INFO 22660 --- [procesador-service] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-13T00:19:38.051-03:00  INFO 22660 --- [procesador-service] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
+2026-10-13T00:19:43.368-03:00  INFO 22660 --- [procesador-service] [           main] c.p.procesador.ProcesadorApplication     : Started ProcesadorApplication in 43.834 seconds (process running for 48.741)
+2026-10-13T00:20:59.774-03:00  WARN 22660 --- [procesador-service] [ntContainer#2-1] o.s.a.l.ConditionalRejectingErrorHandler : Execution of Rabbit message listener failed.
+
+org.springframework.amqp.rabbit.support.ListenerExecutionFailedException: Failed to convert message
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:193) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1697) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1626) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1609) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1600) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListenerAndHandleException(AbstractMessageListenerContainer.java:1547) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1528) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1158) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1103) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1511) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1405) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: java.lang.IllegalArgumentException: The class 'com.pedidos360.backend.messaging.PedidoCreadoEvent' is not in the trusted packages: [java.util, java.lang]. If you believe this class is safe to deserialize, please provide its name. If the serialization is only done by a trusted source, you can also enable trust all (*).
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.getClassIdType(DefaultJacksonJavaTypeMapper.java:259) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.fromTypeHeader(DefaultJacksonJavaTypeMapper.java:230) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.toJavaType(DefaultJacksonJavaTypeMapper.java:209) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.convertContent(AbstractJacksonMessageConverter.java:341) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.JacksonJsonMessageConverter.convertContent(JacksonJsonMessageConverter.java:117) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.doFromMessage(AbstractJacksonMessageConverter.java:320) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.fromMessage(AbstractJacksonMessageConverter.java:283) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.fromMessage(AbstractJacksonMessageConverter.java:266) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverter.extractPayload(MessagingMessageConverter.java:145) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverterAdapter.extractPayload(MessagingMessageConverterAdapter.java:224) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverter.fromMessage(MessagingMessageConverter.java:129) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.toMessagingMessage(MessagingMessageListenerAdapter.java:301) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:183) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	... 11 common frames omitted
+
+2026-10-13T00:20:59.773-03:00  WARN 22660 --- [procesador-service] [ntContainer#1-1] o.s.a.l.ConditionalRejectingErrorHandler : Execution of Rabbit message listener failed.
+
+org.springframework.amqp.rabbit.support.ListenerExecutionFailedException: Failed to convert message
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:193) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1697) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1626) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1609) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1600) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListenerAndHandleException(AbstractMessageListenerContainer.java:1547) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1528) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1158) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1103) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1511) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1405) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: java.lang.IllegalArgumentException: The class 'com.pedidos360.backend.messaging.PedidoCreadoEvent' is not in the trusted packages: [java.util, java.lang]. If you believe this class is safe to deserialize, please provide its name. If the serialization is only done by a trusted source, you can also enable trust all (*).
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.getClassIdType(DefaultJacksonJavaTypeMapper.java:259) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.fromTypeHeader(DefaultJacksonJavaTypeMapper.java:230) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.toJavaType(DefaultJacksonJavaTypeMapper.java:209) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.convertContent(AbstractJacksonMessageConverter.java:341) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.JacksonJsonMessageConverter.convertContent(JacksonJsonMessageConverter.java:117) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.doFromMessage(AbstractJacksonMessageConverter.java:320) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.fromMessage(AbstractJacksonMessageConverter.java:283) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.fromMessage(AbstractJacksonMessageConverter.java:266) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverter.extractPayload(MessagingMessageConverter.java:145) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverterAdapter.extractPayload(MessagingMessageConverterAdapter.java:224) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverter.fromMessage(MessagingMessageConverter.java:129) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.toMessagingMessage(MessagingMessageListenerAdapter.java:301) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:183) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	... 11 common frames omitted
+
+2026-10-13T00:20:59.822-03:00  WARN 22660 --- [procesador-service] [ntContainer#0-1] o.s.a.l.ConditionalRejectingErrorHandler : Execution of Rabbit message listener failed.
+
+org.springframework.amqp.rabbit.support.ListenerExecutionFailedException: Failed to convert message
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:193) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1697) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1626) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1609) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1600) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListenerAndHandleException(AbstractMessageListenerContainer.java:1547) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1528) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1158) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1103) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1511) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1405) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: java.lang.IllegalArgumentException: The class 'com.pedidos360.backend.messaging.GenerarDocumentoCommand' is not in the trusted packages: [java.util, java.lang]. If you believe this class is safe to deserialize, please provide its name. If the serialization is only done by a trusted source, you can also enable trust all (*).
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.getClassIdType(DefaultJacksonJavaTypeMapper.java:259) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.fromTypeHeader(DefaultJacksonJavaTypeMapper.java:230) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.DefaultJacksonJavaTypeMapper.toJavaType(DefaultJacksonJavaTypeMapper.java:209) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.convertContent(AbstractJacksonMessageConverter.java:341) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.JacksonJsonMessageConverter.convertContent(JacksonJsonMessageConverter.java:117) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.doFromMessage(AbstractJacksonMessageConverter.java:320) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.fromMessage(AbstractJacksonMessageConverter.java:283) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.AbstractJacksonMessageConverter.fromMessage(AbstractJacksonMessageConverter.java:266) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverter.extractPayload(MessagingMessageConverter.java:145) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverterAdapter.extractPayload(MessagingMessageConverterAdapter.java:224) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.support.converter.MessagingMessageConverter.fromMessage(MessagingMessageConverter.java:129) ~[spring-amqp-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.toMessagingMessage(MessagingMessageListenerAdapter.java:301) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:183) ~[spring-rabbit-4.1.1.jar!/:4.1.1]
+	... 11 common frames omitted
+

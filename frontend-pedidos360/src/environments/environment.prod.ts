@@ -1,6 +1,9 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://ti8qy9uqt9.execute-api.us-east-1.amazonaws.com',
+  apiBaseUrl: 'https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com',
+  // El API Gateway debe enrutar /api/queues, /api/exchanges, /api/bindings y /api/monitoring
+  // hacia rabbit-admin-service (puerto 8082), igual que /api/pedidos va al backend.
+  adminApiBaseUrl: 'https://6iqkstpi9c.execute-api.us-east-1.amazonaws.com',
   msal: {
     clientId: 'dae98be9-c519-4d2e-870b-6b9899734902',
     authority: 'https://login.microsoftonline.com/404d6b8a-6f61-411a-98f7-3ae685d26aaa',
